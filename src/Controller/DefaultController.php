@@ -21,7 +21,7 @@ class DefaultController extends AbstractController
     }
 
     /**
-     * @Route("/generate_url/{param?}/",name="generate-url")
+     * @Route("/generate_url/{param?}",name="generate-url")
      */
     public function generateUrlAction($param)
     {
@@ -30,5 +30,42 @@ class DefaultController extends AbstractController
             ['param' => 11],
             UrlGeneratorInterface::ABSOLUTE_PATH
         ));
+    }
+
+    /**
+     * @Route("/download", name="download-file")
+     */
+    public function downloadAction()
+    {
+        $path = $this->getParameter('download_directory');
+        return $this->file($path . 'mathcs.pdf');
+    }
+
+    /**
+     * @Route("/redirect-test")
+     */
+    public function redirectTestAction()
+    {
+        return $this->redirectToRoute('redirect-to-route', ['param' => 10]);
+    }
+
+    /**
+     * @Route("/url-to-redirect/{param?}", name="redirect-to-route")
+     * @param $param
+     */
+    public function methodToRedirectAction($param)
+    {
+        exit('test redirection' . $param);
+    }
+
+    /**
+     * @Route("forward-to-controller")
+     */
+    public function forwardToControllerAction()
+    {
+        return $this->forward(
+            self::class . '::methodToRedirectAction',
+            ['param' => 1]
+        );
     }
 }
