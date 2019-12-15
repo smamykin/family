@@ -1,0 +1,21 @@
+<p>Hello, it is include_template here.</p>
+<p>There is not any {{ name }}</p>
+
+{% dump(users) %}
+
+    {% set variable1 = "some string <br> some string <br> some string <br> " %}
+{{ variable1 }}
+{% for i in 1..10 %}
+    <p>{{ cycle(['odd', 'even'], 3) }}</p>
+{% endfor %}
+{{ path('generate-url') }}
+{{ url('generate-url') }}
+<img src="{{ asset('img.png') }}" alt="">
+{% dump(app.request.get('param')) %}
+{# app \Symfony\Bridge\Twig\AppVariable #}
+{% dump(app.environment) %}
+{{ render(controller('App\\Controller\\DefaultController::mostPopularPosts',{'param': 4})) }}
+<script>
+    var variable1 = '{{ variable1|e('js') }}';
+    alert(variable1);
+</script>

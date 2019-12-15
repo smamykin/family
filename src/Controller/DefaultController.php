@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -67,5 +69,10 @@ class DefaultController extends AbstractController
             self::class . '::methodToRedirectAction',
             ['param' => 1]
         );
+    }
+
+    public function mostPopularPosts($param)
+    {
+        return new Response('some new data' . $param);
     }
 }
