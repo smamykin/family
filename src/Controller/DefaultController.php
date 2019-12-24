@@ -31,9 +31,12 @@ class DefaultController extends AbstractController
      */
     public function index()
     {
-        $users = $this->getDoctrine()->getRepository(User::class)->findAll();
+        $users = $this->getDoctrine()
+            ->getRepository(User::class)
+            ->findBy(['name' => 'some new name'], ['id' => 'desc'], 2, 2);
 
-        if ($users) {
+        dump($users);
+        if (empty($users)) {
             throw $this->createNotFoundException('hi it\'s exception');
         }
 
