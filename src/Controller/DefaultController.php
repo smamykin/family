@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Services\GiftsService;
+use Doctrine\DBAL\Connection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,15 +32,21 @@ class DefaultController extends AbstractController
      */
     public function index()
     {
-        $users = $this->getDoctrine()
-            ->getRepository(User::class)
-            ->findBy(['name' => 'some new name'], ['id' => 'desc'], 2, 2);
+        $rep = $this->getDoctrine()->getRepository(User::class);
+        /**
+         * @var $connection Connection
+         */
+        $connection = $this->getDoctrine()->getConnection();
+//        $entityManager->flush();
 
-        dump($users);
-        if (empty($users)) {
-            throw $this->createNotFoundException('hi it\'s exception');
-        }
+        $sql = '
+        SELECT * FROM user u
+        WHERE u.id > :id';
+        $stmt = $connection->prepare($sql);
+        $stmt->execute(['id' => 1]);
+        dump($stmt->fetchAll());
 
+        $users = [];
         return $this->render(
             'default/index.html.twig',
             [
@@ -48,6 +55,18 @@ class DefaultController extends AbstractController
                 'random_gift' => $this->gifts
             ]
         );
+    }
+
+    /**
+     * @Route("/home/{name}", name="home")
+     * @param Request $request
+     * @param User $user
+     * @return Response
+     */
+    public function homeAction(Request $request, User $user)
+    {
+        dump($user);
+        return $this->render('default/home.html.twig', []);
     }
 
     /**
