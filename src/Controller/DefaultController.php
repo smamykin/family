@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\Video;
 use App\Services\GiftsService;
 use Doctrine\DBAL\Connection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -67,6 +68,28 @@ class DefaultController extends AbstractController
     {
         dump($user);
         return $this->render('default/home.html.twig', []);
+    }
+
+
+    /**
+     * @Route("/lifecicles", name="lifecicles")
+     */
+    public function lifeCiclesAction()
+    {
+
+        $user = new User();
+        $user->setName('lifecicles-test - ' . mt_rand());
+        $em = $this->getDoctrine()->getManager();
+        for ($i = 5; $i--;) {
+            $video = new Video();
+            $video->setTitle('some video title - ' . (new \DateTimeImmutable())->format('Y.m.d H.i.s'));
+            $user->addVideo($video);
+        }
+
+        $em->persist($user);
+        $em->flush();
+
+        return $this->render('default/lifecicles-test.html.twig', ['user' => $user]);
     }
 
     /**
