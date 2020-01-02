@@ -2,10 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Address;
 use App\Entity\User;
 use App\Entity\Video;
 use App\Services\GiftsService;
 use Doctrine\DBAL\Connection;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -101,6 +103,27 @@ class DefaultController extends AbstractController
         $this->getDoctrine()->getManager()->flush();
 
         return $this->render('default/lifecicles-test.html.twig', ['user' => $user]);
+    }
+
+    /**
+     * @Route("/relation", name="relation")
+     * @return Response
+     */
+    public function relationAction()
+    {
+        $user  = new User();
+        $user->setName('Adam');
+        $address = new Address();
+        $address->setNumber('4');
+        $address->setStreet(1242);
+        $user->setAddress($address);
+        $em = $this->getDoctrine()->getManager();
+//        $em->persist($address);
+        $em->persist($user);
+        $em->flush();
+
+        $status = 'OK';
+        return $this->render('default/relation.html.twig', ['status' => $status]);
     }
 
     /**
