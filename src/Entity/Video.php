@@ -23,6 +23,7 @@ class Video
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="videos")
+     * @ORM\JoinColumn(nullable=true)
      */
     private $user;
 

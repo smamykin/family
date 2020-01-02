@@ -75,17 +75,30 @@ class DefaultController extends AbstractController
     public function lifeCiclesAction()
     {
 
-        $user = new User();
-        $user->setName('lifecicles-test - ' . mt_rand());
-        $em = $this->getDoctrine()->getManager();
-        for ($i = 5; $i--;) {
-            $video = new Video();
-            $video->setTitle('some video title - ' . (new \DateTimeImmutable())->format('Y.m.d H.i.s'));
-            $user->addVideo($video);
-        }
+//        $user = new User();
+//        $user->setName('lifecicles-test - ' . mt_rand());
+//        $em = $this->getDoctrine()->getManager();
+//        for ($i = 5; $i--;) {
+//            $video = new Video();
+//            $video->setTitle('some video title - ' . (new \DateTimeImmutable())->format('Y.m.d H.i.s'));
+//            $user->addVideo($video);
+//        }
+//
+//        $em->persist($user);
+//        $em->flush();
+//        $video = $this->getDoctrine()->getRepository(Video::class)->find(3);
+//        /** @var $video Video */
+//        $user = $video->getUser();
+//        $user->getName();
 
-        $em->persist($user);
-        $em->flush();
+        /** @var User $user */
+        $user = $this->getDoctrine()->getRepository(User::class)->find(1);
+        foreach($user->getVideos() as $video) {
+            $user->removeVideo($video);
+            break;
+        }
+//        $this->getDoctrine()->getManager()->remove($user);
+        $this->getDoctrine()->getManager()->flush();
 
         return $this->render('default/lifecicles-test.html.twig', ['user' => $user]);
     }

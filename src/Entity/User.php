@@ -39,7 +39,7 @@ class User
     private $createdAt;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Video", mappedBy="user", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Video", mappedBy="user", cascade={"persist"}, orphanRemoval=true)
      */
     private $videos;
 
