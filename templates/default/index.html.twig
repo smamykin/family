@@ -1,7 +1,6 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Hello {{ 'DefaultController'|upper }}!{% endblock %}
-{% set users = ['Abrahm', 'Nickola', 'Jhon', 'Janet'] %}
 
 {% block body %}
     <p>{{ ga_code }}</p>
@@ -25,5 +24,15 @@
             {{ include('default/includes/include_template.html.twig', {'name': 'Jane!t' , 'users': users}) }}
         {% endfor %}
     </ul>
+
+    {% for label, messages in app.flashes %}
+        <div class="flash-{{ label }}">
+            {% for msg in messages %}
+                {{ msg }}
+            {% endfor %}
+        </div>
+    {% endfor %}
+
+
 </div>
 {% endblock %}

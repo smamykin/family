@@ -3,7 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\Video;
+use App\Services\GiftsService;
+use Doctrine\DBAL\Connection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -11,15 +15,99 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class DefaultController extends AbstractController
 {
     /**
+     * @var array
+     */
+    private $gifts;
+
+    public function __construct(GiftsService $gifts, $logger)
+    {
+        $this->gifts = $gifts->gifts;
+        $this->logger = $logger;
+    }
+
+    /**
      * @Route("/", name="index")
+     * @return Response
      */
     public function index()
     {
-        $users = ['adam', 'Robert' ];
-        return $this->render('default/index.html.twig', [
-            'controller_name' => 'DefaultController',
-            'users' => $users,
-        ]);
+        $rep = $this->getDoctrine()->getRepository(User::class);
+        /**
+         * @var $connection Connection
+         */
+        $connection = $this->getDoctrine()->getConnection();
+//        $entityManager->flush();
+
+        $sql = '
+        SELECT * FROM user u
+        WHERE u.id > :id';
+        $stmt = $connection->prepare($sql);
+        $stmt->execute(['id' => 1]);
+        dump($stmt->fetchAll());
+
+        $users = [];
+        return $this->render(
+            'default/index.html.twig',
+            [
+                'controller_name' => 'DefaultController',
+                'users' => $users,
+                'random_gift' => $this->gifts
+            ]
+        );
+    }
+
+    /**
+     * @Route("/home/{name}", name="home")
+     * @param Request $request
+     * @param User $user
+     * @return Response
+     */
+    public function homeAction(Request $request, User $user)
+    {
+        dump($user);
+        return $this->render('default/home.html.twig', []);
+    }
+
+
+    /**
+     * @Route("/lifecicles", name="lifecicles")
+     */
+    public function lifeCiclesAction()
+    {
+
+        $user = new User();
+        $user->setName('lifecicles-test - ' . mt_rand());
+        $em = $this->getDoctrine()->getManager();
+        for ($i = 5; $i--;) {
+            $video = new Video();
+            $video->setTitle('some video title - ' . (new \DateTimeImmutable())->format('Y.m.d H.i.s'));
+            $user->addVideo($video);
+        }
+
+        $em->persist($user);
+        $em->flush();
+
+        return $this->render('default/lifecicles-test.html.twig', ['user' => $user]);
+    }
+
+    /**
+     * @Route(
+     *     "/articles/{_locale}/{year}/{slug}/{category}",
+     *     defaults={"category":"computers"},
+     *     requirements={"_locale": "en|fr", "category":"computers|rtv","year":"\d+"}
+     * )
+     */
+    public function index2()
+    {
+        return new Response('An advanced route example');
+    }
+
+    /**
+     * @Route({"nl": "/over-ons","en":"about-us"}, name="about_us")
+     */
+    public function index3()
+    {
+        return new Response('Translated routes');
     }
 
     /**
@@ -74,45 +162,5 @@ class DefaultController extends AbstractController
     public function mostPopularPosts($param)
     {
         return new Response('some new data' . $param);
-    }
-
-    /**
-     * @Route("create-user", name="create-user")
-     */
-    public function createUser()
-    {
-        $rep = $this->getDoctrine()->getRepository(User::class);
-        $user = $rep->find(6);
-        dump($user);
-        $user = $rep->findOneBy(['name'=> 'name - 1']);
-        dump($user);
-
-
-
-        return $this->render('default/crud.html.twig');
-    }
-
-    /**
-     * @Route("/update-if-exists/{param?}", name="crud-update")
-     * @param $param
-     * @return Response
-     */
-    public function updateUser($param)
-    {
-        $rep = $this->getDoctrine()->getRepository(User::class);
-        $id = $param ?? 8 ;
-        /** @var User $user */
-        $user = $rep->find($id);
-        if (!$user) {
-            throw $this->createNotFoundException('No user for id ' . $id);
-        }
-
-        $user->setName('New name');
-        $em = $this->getDoctrine()->getManager();
-        $em->flush();
-
-        dump($user);
-
-        return $this->render('default/crud.html.twig');
     }
 }
