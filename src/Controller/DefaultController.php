@@ -149,6 +149,18 @@ class DefaultController extends AbstractController
     }
 
     /**
+     * @Route("/eager", name="eager")
+     * @return Response
+     */
+    public function eagerLoadingAction()
+    {
+        $status = 'OK';
+        $user = $this->getDoctrine()->getRepository(User::class)->findWithVideos(73);
+        dump($user);
+        return $this->render('default/relation.html.twig', ['status' => $status]);
+    }
+
+    /**
      * @Route(
      *     "/articles/{_locale}/{year}/{slug}/{category}",
      *     defaults={"category":"computers"},
