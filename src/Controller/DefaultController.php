@@ -127,6 +127,28 @@ class DefaultController extends AbstractController
     }
 
     /**
+     * @Route("/many_to_many", name="many_to_many")
+     */
+    public function relationManyToManyAction()
+    {
+        $status = 'OK';
+        $userRep = $this->getDoctrine()->getRepository(User::class);
+        $users = $userRep->findAll();
+        /** @var User $firstUser */
+        $firstUser = array_shift($users);
+//        foreach ($users as $user) {
+//            /** @var User $user */
+//            $firstUser->addFollowed($user);
+//        }
+//        $this->getDoctrine()->getManager()->flush();
+        dump($firstUser->getFollowed()->count());
+        dump($firstUser->getFollowing()->count());
+        dump(array_shift($users)->getFollowing()->count());
+
+        return $this->render('default/relation.html.twig', ['status' => $status]);
+    }
+
+    /**
      * @Route(
      *     "/articles/{_locale}/{year}/{slug}/{category}",
      *     defaults={"category":"computers"},

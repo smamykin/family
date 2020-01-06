@@ -22,7 +22,7 @@ class Video
     private $title;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="videos")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="videos", cascade={"persist"})
      * @ORM\JoinColumn(nullable=true)
      */
     private $user;
