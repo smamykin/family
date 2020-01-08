@@ -24,7 +24,7 @@ class Author
     private $name;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\File", mappedBy="author")
+     * @ORM\OneToMany(targetEntity="App\Entity\File", mappedBy="author", cascade={"persist"})
      */
     private $files;
 

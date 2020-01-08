@@ -6,6 +6,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\FileRepository")
+ * @ORM\InheritanceType("SINGLE_TABLE")
+ * @ORM\DiscriminatorColumn(name="type", type="string")
+ * @ORM\DiscriminatorMap({"video"= "VideoFile", "pdf" = "Pdf"})
  */
 abstract class File
 {
@@ -32,7 +35,7 @@ abstract class File
     private $description;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Author", inversedBy="files")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Author", inversedBy="files", cascade={"persist"})
      */
     private $author;
 

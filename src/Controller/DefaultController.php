@@ -3,8 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Address;
+use App\Entity\Author;
+use App\Entity\File;
+use App\Entity\Pdf;
 use App\Entity\User;
 use App\Entity\Video;
+use App\Entity\VideoFile;
 use App\Services\GiftsService;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -155,8 +159,11 @@ class DefaultController extends AbstractController
     public function eagerLoadingAction()
     {
         $status = 'OK';
-        $user = $this->getDoctrine()->getRepository(User::class)->findWithVideos(73);
-        dump($user);
+        $author = $this->getDoctrine()->getRepository(Author::class)->findByIdWithPdf(3);
+        foreach ($author->getFiles() as $file){
+            dump($file);
+        }
+
         return $this->render('default/relation.html.twig', ['status' => $status]);
     }
 
