@@ -10,6 +10,7 @@ use App\Entity\User;
 use App\Entity\Video;
 use App\Entity\VideoFile;
 use App\Services\GiftsService;
+use App\Services\MyService;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -156,13 +157,9 @@ class DefaultController extends AbstractController
      * @Route("/eager", name="eager")
      * @return Response
      */
-    public function eagerLoadingAction()
+    public function eagerLoadingAction(MyService $service)
     {
         $status = 'OK';
-        $author = $this->getDoctrine()->getRepository(Author::class)->findByIdWithPdf(3);
-        foreach ($author->getFiles() as $file){
-            dump($file);
-        }
 
         return $this->render('default/relation.html.twig', ['status' => $status]);
     }
