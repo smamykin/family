@@ -4,8 +4,10 @@ namespace App\Services;
 
 class MyService
 {
-    public function __construct($param)
+    use MyServiceTrait;
+
+    public function someAction()
     {
-        dump($param);
+        $this->service->someAction();
     }
 }

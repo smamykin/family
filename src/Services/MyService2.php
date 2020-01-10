@@ -8,4 +8,9 @@ class MyService2
     {
         dump('second service constructor');
     }
+
+    public function someAction()
+    {
+        dump('wow');
+    }
 }

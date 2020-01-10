@@ -32,6 +32,3 @@ services:
     App\Controller\DefaultController:
         bind:
             $logger: '@monolog.logger.doctrine'
-    App\Services\MyService:
-        arguments:
-            $param: '@App\Services\MyService2'
