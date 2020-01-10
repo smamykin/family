@@ -4,10 +4,13 @@ namespace App\Services;
 
 class MyService
 {
-    use MyServiceTrait;
+    public $my;
+    public $notMy;
+    public $logger;
+
 
     public function someAction()
     {
-        $this->service->someAction();
+        dump($this->my, $this->notMy, $this->logger);
     }
 }
