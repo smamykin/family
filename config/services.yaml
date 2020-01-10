@@ -33,7 +33,7 @@ services:
         bind:
             $logger: '@monolog.logger.doctrine'
     App\Services\MyService:
-        properties:
-            my: '@App\Services\MyService2'
-            notMy: '@Psr\Log\LoggerInterface'
-            logger: '@monolog.logger'
+        arguments:
+            $service: '@App\Services\MyService2'
+    App\Services\MyService2:
+        lazy: true

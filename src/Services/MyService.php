@@ -4,13 +4,20 @@ namespace App\Services;
 
 class MyService
 {
-    public $my;
-    public $notMy;
-    public $logger;
+    /**
+     * @var MyService2
+     */
+    public $service;
 
+    public function __construct(MyService2 $service)
+    {
+        dump($service);
+        $this->service = $service;
+    }
 
     public function someAction()
     {
-        dump($this->my, $this->notMy, $this->logger);
+        $this->service->someAction();
+        dump($this->service);
     }
 }

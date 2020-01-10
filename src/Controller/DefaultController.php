@@ -160,7 +160,7 @@ class DefaultController extends AbstractController
     public function eagerLoadingAction(MyService $service)
     {
         $status = 'OK';
-        $service->someAction();
+//        $service->someAction();
         return $this->render('default/relation.html.twig', ['status' => $status]);
     }
 
