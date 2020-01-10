@@ -32,8 +32,10 @@ services:
     App\Controller\DefaultController:
         bind:
             $logger: '@monolog.logger.doctrine'
-    App\Services\MyService:
+    app.myservice:
+        class: 'App\Services\MyService'
         arguments:
-            $service: '@App\Services\MyService2'
-    App\Services\MyService2:
-        lazy: true
+            $one: 'some'
+        public: true
+
+    App\Services\MyService: '@app.myservice'

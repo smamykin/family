@@ -14,6 +14,7 @@ use App\Services\MyService;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -157,10 +158,10 @@ class DefaultController extends AbstractController
      * @Route("/eager", name="eager")
      * @return Response
      */
-    public function eagerLoadingAction(MyService $service)
+    public function eagerLoadingAction(MyService $service, ContainerInterface $container)
     {
         $status = 'OK';
-//        $service->someAction();
+        dump($container->get('app.myservice'));
         return $this->render('default/relation.html.twig', ['status' => $status]);
     }
 
