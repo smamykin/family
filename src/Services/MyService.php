@@ -4,8 +4,8 @@ namespace App\Services;
 
 class MyService
 {
-    public function __construct($param1, $globalParameter)
+    public function __construct($param)
     {
-        dump($param1, $globalParameter);
+        dump($param);
     }
 }

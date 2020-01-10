@@ -34,4 +34,4 @@ services:
             $logger: '@monolog.logger.doctrine'
     App\Services\MyService:
         arguments:
-            $param1: 'some_param1'
+            $param: '@App\Services\MyService2'
