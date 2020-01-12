@@ -14,9 +14,12 @@ use App\Services\MyService;
 use App\Services\ServiceInterface;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Cache\CacheException;
 use Psr\Cache\CacheItemInterface;
+use Psr\Cache\InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Component\Cache\Adapter\TagAwareAdapter;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -162,24 +165,59 @@ class DefaultController extends AbstractController
      * @Route("/eager", name="eager")
      * @param ServiceInterface $service
      * @return Response
+     * @throws InvalidArgumentException
+     * @throws CacheException
      */
     public function eagerLoadingAction(ServiceInterface $service)
     {
         $status = 'OK';
-        $cache = new FilesystemAdapter();
-        /** @var CacheItemInterface $posts */
-        $posts = $cache->getItem('database.get_posts');
-        if (!$posts->isHit()) {
-            $posts_from_db = ['post 1', 'post 2', 'post 3'];
-            dump('connected with database ...');
-            $posts->set(serialize($posts_from_db));
-            $posts->expiresAfter(10);
-            $cache->save($posts);
+        $cache = new TagAwareAdapter(
+            new FilesystemAdapter()
+        );
+
+        $acer  = $cache->getItem('acer');
+        $dell  = $cache->getItem('dell');
+        $ibm  = $cache->getItem('ibm');
+        $apple  = $cache->getItem('apple');
+        if (!$acer->isHit()) {
+            $acerFromDb = 'acer laptop';
+            $acer->set($acerFromDb);
+            $acer->tag(['computers','laptops','acer']);
+            $cache->save($acer);
+            dump('acer laptop from db');
         }
 
-//        $cache->deleteItem('database.get_posts');
-//        $cache->clear();
-        dump(unserialize($posts->get()));
+        if (!$dell->isHit()) {
+            $dellFromDb = 'dell laptop';
+            $dell->set($dellFromDb);
+            $dell->tag(['computers','laptops','dell']);
+            $cache->save($dell);
+            dump('dell laptop from db');
+        }
+
+        if (!$ibm->isHit()) {
+            $ibmFromDb = 'ibm desktop';
+            $ibm->set($ibmFromDb);
+            $ibm->tag(['computers','desktops','ibm']);
+            $cache->save($ibm);
+            dump('ibm desktop from db');
+        }
+
+        if (!$apple->isHit()) {
+            $appleFromDb = 'apple desktop';
+            $apple->set($appleFromDb);
+            $apple->tag(['computers','desktops','apple']);
+            $cache->save($apple);
+            dump('apple desktop from db');
+        }
+
+//        $cache->invalidateTags(['ibm']);//1
+//        $cache->invalidateTags(['desktops']);//2
+//        $cache->invalidateTags(['laptops']);//3
+        $cache->invalidateTags(['computers']);//4
+
+        dump($acer, $dell, $ibm, $apple);
+
         return $this->render('default/relation.html.twig', ['status' => $status]);
     }
 
