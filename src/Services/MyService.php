@@ -2,10 +2,20 @@
 
 namespace App\Services;
 
-class MyService
+class MyService implements ServiceInterface
 {
-    public function __construct($one)
+    public function __construct()
     {
-        dump($one);
+        dump('hello, it\'s constructor');
+    }
+
+    public function postFlush()
+    {
+        dump('postFlush ...');
+    }
+
+    public function clear()
+    {
+        dump('clear...');
     }
 }
