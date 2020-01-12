@@ -14,12 +14,15 @@ use App\Services\MyService;
 use App\Services\ServiceInterface;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Cache\CacheItemInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Contracts\Cache\ItemInterface;
 
 class DefaultController extends AbstractController
 {
@@ -163,8 +166,20 @@ class DefaultController extends AbstractController
     public function eagerLoadingAction(ServiceInterface $service)
     {
         $status = 'OK';
-        dump('milk');
+        $cache = new FilesystemAdapter();
+        /** @var CacheItemInterface $posts */
+        $posts = $cache->getItem('database.get_posts');
+        if (!$posts->isHit()) {
+            $posts_from_db = ['post 1', 'post 2', 'post 3'];
+            dump('connected with database ...');
+            $posts->set(serialize($posts_from_db));
+            $posts->expiresAfter(10);
+            $cache->save($posts);
+        }
 
+//        $cache->deleteItem('database.get_posts');
+//        $cache->clear();
+        dump(unserialize($posts->get()));
         return $this->render('default/relation.html.twig', ['status' => $status]);
     }
 
