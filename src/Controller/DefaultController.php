@@ -222,6 +222,15 @@ class DefaultController extends AbstractController
     }
 
     /**
+     * @Route("/listener", name="listener")
+     */
+    public function eventListenerAction()
+    {
+        $status = 'ОК';
+        return $this->render('default/relation.html.twig', ['status' => $status]);
+    }
+
+    /**
      * @Route(
      *     "/articles/{_locale}/{year}/{slug}/{category}",
      *     defaults={"category":"computers"},
