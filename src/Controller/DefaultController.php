@@ -3,24 +3,17 @@
 namespace App\Controller;
 
 use App\Entity\Address;
-use App\Entity\Author;
-use App\Entity\File;
-use App\Entity\Pdf;
 use App\Entity\User;
-use App\Entity\Video;
-use App\Entity\VideoFile;
-use App\Services\GiftsService;
-use App\Services\MyService;
+use App\Event\VideoCreatedEvent;
 use App\Services\ServiceInterface;
 use Doctrine\DBAL\Connection;
-use Doctrine\ORM\EntityManagerInterface;
 use Psr\Cache\CacheException;
-use Psr\Cache\CacheItemInterface;
 use Psr\Cache\InvalidArgumentException;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Cache\Adapter\TagAwareAdapter;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -30,14 +23,18 @@ use Symfony\Contracts\Cache\ItemInterface;
 class DefaultController extends AbstractController
 {
     /**
-     * @var array
+     * @var EventDispatcherInterface
      */
-    private $gifts;
+    private $dispatcher;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
-    public function __construct(GiftsService $gifts, $logger)
+    public function __construct(EventDispatcherInterface $dispatcher, LoggerInterface $logger)
     {
-        $this->gifts = $gifts->gifts;
         $this->logger = $logger;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -227,6 +224,12 @@ class DefaultController extends AbstractController
     public function eventListenerAction()
     {
         $status = 'ОК';
+        $video = new \stdClass();
+        $video->title = 'title';
+        $video->category = 'category';
+        $event = new VideoCreatedEvent($video);
+        $this->dispatcher->dispatch('video.created.event', $event);
+
         return $this->render('default/relation.html.twig', ['status' => $status]);
     }
 

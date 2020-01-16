@@ -35,6 +35,6 @@ services:
 
     App\Services\ServiceInterface: '@App\Services\MyService'
 
-    App\Services\KernelResponseListener:
-        tags:
-            - { name: kernel.event_listener, event: kernel.response }
+#    App\Listener\VideoCreatedListener:
+#        tags:
+#            - { name: kernel.event_listener, event: video.created.event, method: onVideoCreatedEvent }
