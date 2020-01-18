@@ -14,6 +14,7 @@ use Exception;
 use Psr\Cache\CacheException;
 use Psr\Cache\InvalidArgumentException;
 use Psr\Log\LoggerInterface;
+use Swift_Mailer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Cache\Adapter\TagAwareAdapter;
@@ -256,6 +257,25 @@ class DefaultController extends AbstractController
         }
 
         return $this->render('default/relation.html.twig', ['status' => $status, 'form' => $form->createView()]);
+    }
+
+    /**
+     * @param Swift_Mailer $mailer
+     * @Route("/mailing")
+     * @return Response
+     */
+    public function mailingAction(Swift_Mailer $mailer)
+    {
+        $message = (new \Swift_Message('Hello Email'))
+            ->setFrom('send@example.com')
+            ->setTo('recipient@example.com')
+            ->setBody(
+                $this->renderView('emails/registration.html.twig', ['name'=>'Robert']),
+                'text/html'
+            );
+        $mailer->send($message);
+
+        return $this->render('default/mailing.html.twig', ['status'=>'OK']);
     }
 
     /**
