@@ -4,9 +4,13 @@ namespace App\Controller;
 
 use App\Entity\Address;
 use App\Entity\User;
+use App\Entity\Video;
 use App\Event\VideoCreatedEvent;
+use App\Form\VideoFormType;
 use App\Services\ServiceInterface;
+use DateTimeImmutable;
 use Doctrine\DBAL\Connection;
+use Exception;
 use Psr\Cache\CacheException;
 use Psr\Cache\InvalidArgumentException;
 use Psr\Log\LoggerInterface;
@@ -18,6 +22,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 
 class DefaultController extends AbstractController
@@ -220,17 +225,37 @@ class DefaultController extends AbstractController
 
     /**
      * @Route("/listener", name="listener")
+     * @param Request $request
+     * @return Response
+     * @throws Exception
      */
-    public function eventListenerAction()
+    public function eventListenerAction(Request $request)
     {
+        dump($request->request);
+        $em = $this->getDoctrine()->getManager();
+        $videos = $this->getDoctrine()->getRepository(Video::class)->findAll();
+        dump($videos);
         $status = 'ОК';
-        $video = new \stdClass();
-        $video->title = 'title';
-        $video->category = 'category';
-        $event = new VideoCreatedEvent($video);
-        $this->dispatcher->dispatch('video.created.event', $event);
+        $video = new Video();
+//        $video = $this->getDoctrine()->getRepository(Video::class)->findOneBy([]);
+        $form = $this->createForm(VideoFormType::class, $video);
 
-        return $this->render('default/relation.html.twig', ['status' => $status]);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            dump($form->getData());
+            $file = $form->get('file')->getData();
+            dump($file);
+            $fileName = sha1(random_bytes(14)) . '.' . $file->guessExtension();
+            $file->move(
+                $this->getParameter('image_directory'),
+                $fileName
+            );
+            $video->setFile($fileName);
+            $em->persist($video);
+            $em->flush();
+        }
+
+        return $this->render('default/relation.html.twig', ['status' => $status, 'form' => $form->createView()]);
     }
 
     /**
