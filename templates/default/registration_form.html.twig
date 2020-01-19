@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+{{ status }}
+    {% if app.user %}
+        <a href="{{ path('logout') }}">logout</a>
+    {% endif %}
+    {{ form(form) }}
+{% endblock %}
+
+{% block title %}
+registration form
+{% endblock %}
+

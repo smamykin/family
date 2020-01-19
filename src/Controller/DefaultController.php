@@ -3,9 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Address;
+use App\Entity\SecurityUser;
 use App\Entity\User;
 use App\Entity\Video;
 use App\Event\VideoCreatedEvent;
+use App\Form\RegisterUserType;
 use App\Form\VideoFormType;
 use App\Services\ServiceInterface;
 use DateTimeImmutable;
@@ -23,6 +25,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 
@@ -350,5 +354,55 @@ class DefaultController extends AbstractController
     public function mostPopularPosts($param)
     {
         return new Response('some new data' . $param);
+    }
+
+    /**
+     * @param Request $request
+     * @param UserPasswordEncoderInterface $passwordEncoder
+     * @return Response
+     * @Route("/registration_form", name="registration")
+     */
+    public function registrationFormAction(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    {
+        $user = new SecurityUser();
+        $form = $this->createForm(RegisterUserType::class, $user);
+
+        $em =  $this->getDoctrine()->getManager();
+        $users = $em->getRepository(SecurityUser::class)->findAll();
+
+        dump($users);
+
+        $form->handleREquest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            dump($form->get('password')->getData());
+            $user->setPassword(
+                $passwordEncoder->encodePassword($user, $form->get('password')->getData())
+            );
+            $user->setEmail($form->get('email')->getData());
+
+            $em->persist($user);
+            $em->flush();
+        }
+
+        return $this->render('default/registration_form.html.twig', [
+            'status' => 'OK',
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @param AuthenticationUtils $authenticationUtils
+     * @return Response
+     * @Route("/login", name="login")
+     */
+    public function login(AuthenticationUtils $authenticationUtils)
+    {
+        $error =  $authenticationUtils->getLastAuthenticationError();
+        $lastUsername = $authenticationUtils->getLastUsername();
+
+        return $this->render('security/login.html.twig', [
+            'last_username' => $lastUsername,
+            'error' => $error,
+        ]);
     }
 }
