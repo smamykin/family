@@ -405,4 +405,24 @@ class DefaultController extends AbstractController
             'error' => $error,
         ]);
     }
+    
+    public function createAdminAction(Request $request, UserPasswordEncoderInterfase $passwordEncoder) 
+    {
+        $em = $this->getDoctrine()->getManager();
+        $users = $this->getRepositiry(SecirityUser::class)->getAll();
+        dump($users);
+
+        $user = new SecurityUser();
+        $user->setEmail('admin@email.ru');
+        $user->setPassword(
+            $passwordEncoder->cencodePassword($user,'1234');
+        );
+        $user->setRoles(['ROLE_ADMIN']);
+
+        $em->persist($user);
+        $em->flush();
+
+        return $this->render('template/default/status.html.twig', 'statue' => 'ok')
+    }
+
 }
