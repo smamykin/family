@@ -405,24 +405,42 @@ class DefaultController extends AbstractController
             'error' => $error,
         ]);
     }
-    
-    public function createAdminAction(Request $request, UserPasswordEncoderInterfase $passwordEncoder) 
+
+    /**
+     * @param Request $request
+     * @param UserPasswordEncoderInterface $passwordEncoder
+     * @return Response
+     * @throws Exception
+     * @Route("create_admin_action")
+     */
+    public function createAdminAction(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
         $em = $this->getDoctrine()->getManager();
-        $users = $this->getRepositiry(SecirityUser::class)->getAll();
+        $users = $this->getDoctrine()->getRepository(SecurityUser::class)->findAll();
         dump($users);
 
         $user = new SecurityUser();
-        $user->setEmail('admin@email.ru');
+        $user->setEmail('admin1@email.ru');
         $user->setPassword(
-            $passwordEncoder->cencodePassword($user,'1234');
+            $passwordEncoder->encodePassword($user, '1234')
         );
         $user->setRoles(['ROLE_ADMIN']);
+
+        $video = new Video();
+        $video->setTitle('video title');
+        $video->setFile('video path');
+        $video->setCreatedAt(new \DateTime());
+        $em->persist($video);
+
+        $user->addVideo($video);
 
         $em->persist($user);
         $em->flush();
 
-        return $this->render('template/default/status.html.twig', 'statue' => 'ok')
+        dump($user->getId());
+        dump($video->getId());
+
+        return $this->render('default/status.html.twig', ['status' => 'ok']);
     }
 
 }
