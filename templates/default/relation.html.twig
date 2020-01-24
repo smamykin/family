@@ -2,6 +2,16 @@
 
 {% block body %}
     {{ status }}
+
+    {% form_theme form 'bootstrap_4_layout.html.twig' %}
+    {{ form_start(form) }}
+    {{ form_label(form.title) }}
+    {{ form_widget(form.title) }}
+    {% if (form.created_at is defined) %}
+        {{ form_label(form.created_at) }}
+        {{ form_widget(form.created_at) }}
+    {% endif %}
+    {{ form_end(form) }}
 {% endblock %}
 
 {% block title %}

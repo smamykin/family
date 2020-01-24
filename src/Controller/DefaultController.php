@@ -3,13 +3,20 @@
 namespace App\Controller;
 
 use App\Entity\Address;
+use App\Entity\SecurityUser;
 use App\Entity\User;
+use App\Entity\Video;
 use App\Event\VideoCreatedEvent;
+use App\Form\RegisterUserType;
+use App\Form\VideoFormType;
 use App\Services\ServiceInterface;
+use DateTimeImmutable;
 use Doctrine\DBAL\Connection;
+use Exception;
 use Psr\Cache\CacheException;
 use Psr\Cache\InvalidArgumentException;
 use Psr\Log\LoggerInterface;
+use Swift_Mailer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Cache\Adapter\TagAwareAdapter;
@@ -18,6 +25,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 
 class DefaultController extends AbstractController
@@ -220,17 +230,56 @@ class DefaultController extends AbstractController
 
     /**
      * @Route("/listener", name="listener")
+     * @param Request $request
+     * @return Response
+     * @throws Exception
      */
-    public function eventListenerAction()
+    public function eventListenerAction(Request $request)
     {
+        dump($request->request);
+        $em = $this->getDoctrine()->getManager();
+        $videos = $this->getDoctrine()->getRepository(Video::class)->findAll();
+        dump($videos);
         $status = 'ОК';
-        $video = new \stdClass();
-        $video->title = 'title';
-        $video->category = 'category';
-        $event = new VideoCreatedEvent($video);
-        $this->dispatcher->dispatch('video.created.event', $event);
+        $video = new Video();
+//        $video = $this->getDoctrine()->getRepository(Video::class)->findOneBy([]);
+        $form = $this->createForm(VideoFormType::class, $video);
 
-        return $this->render('default/relation.html.twig', ['status' => $status]);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            dump($form->getData());
+            $file = $form->get('file')->getData();
+            dump($file);
+            $fileName = sha1(random_bytes(14)) . '.' . $file->guessExtension();
+            $file->move(
+                $this->getParameter('image_directory'),
+                $fileName
+            );
+            $video->setFile($fileName);
+            $em->persist($video);
+            $em->flush();
+        }
+
+        return $this->render('default/relation.html.twig', ['status' => $status, 'form' => $form->createView()]);
+    }
+
+    /**
+     * @param Swift_Mailer $mailer
+     * @Route("/mailing")
+     * @return Response
+     */
+    public function mailingAction(Swift_Mailer $mailer)
+    {
+        $message = (new \Swift_Message('Hello Email'))
+            ->setFrom('send@example.com')
+            ->setTo('recipient@example.com')
+            ->setBody(
+                $this->renderView('emails/registration.html.twig', ['name'=>'Robert']),
+                'text/html'
+            );
+        $mailer->send($message);
+
+        return $this->render('default/mailing.html.twig', ['status'=>'OK']);
     }
 
     /**
@@ -306,4 +355,74 @@ class DefaultController extends AbstractController
     {
         return new Response('some new data' . $param);
     }
+
+    /**
+     * @param Request $request
+     * @param UserPasswordEncoderInterface $passwordEncoder
+     * @return Response
+     * @Route("/registration_form", name="registration")
+     */
+    public function registrationFormAction(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    {
+        $user = new SecurityUser();
+        $form = $this->createForm(RegisterUserType::class, $user);
+
+        $em =  $this->getDoctrine()->getManager();
+        $users = $em->getRepository(SecurityUser::class)->findAll();
+
+        dump($users);
+
+        $form->handleREquest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            dump($form->get('password')->getData());
+            $user->setPassword(
+                $passwordEncoder->encodePassword($user, $form->get('password')->getData())
+            );
+            $user->setEmail($form->get('email')->getData());
+
+            $em->persist($user);
+            $em->flush();
+        }
+
+        return $this->render('default/registration_form.html.twig', [
+            'status' => 'OK',
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @param AuthenticationUtils $authenticationUtils
+     * @return Response
+     * @Route("/login", name="login")
+     */
+    public function login(AuthenticationUtils $authenticationUtils)
+    {
+        $error =  $authenticationUtils->getLastAuthenticationError();
+        $lastUsername = $authenticationUtils->getLastUsername();
+
+        return $this->render('security/login.html.twig', [
+            'last_username' => $lastUsername,
+            'error' => $error,
+        ]);
+    }
+    
+    public function createAdminAction(Request $request, UserPasswordEncoderInterfase $passwordEncoder) 
+    {
+        $em = $this->getDoctrine()->getManager();
+        $users = $this->getRepositiry(SecirityUser::class)->getAll();
+        dump($users);
+
+        $user = new SecurityUser();
+        $user->setEmail('admin@email.ru');
+        $user->setPassword(
+            $passwordEncoder->cencodePassword($user,'1234');
+        );
+        $user->setRoles(['ROLE_ADMIN']);
+
+        $em->persist($user);
+        $em->flush();
+
+        return $this->render('template/default/status.html.twig', 'statue' => 'ok')
+    }
+
 }

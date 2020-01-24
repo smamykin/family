@@ -6,6 +6,7 @@
 parameters:
     download_directory: '../public/'
     some_param2: 'some_param2'
+    image_directory: '%kernel.project_dir%/public/uploads/images'
 
 services:
     # default configuration for services in *this* file
