@@ -16,6 +16,7 @@ use Exception;
 use Psr\Cache\CacheException;
 use Psr\Cache\InvalidArgumentException;
 use Psr\Log\LoggerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Swift_Mailer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
@@ -409,38 +410,16 @@ class DefaultController extends AbstractController
     /**
      * @param Request $request
      * @param UserPasswordEncoderInterface $passwordEncoder
+     * @param Video $video
      * @return Response
-     * @throws Exception
-     * @Route("create_admin_action")
+     * @Route("admin/{id}")
      */
-    public function createAdminAction(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    public function createAdminAction(Request $request, UserPasswordEncoderInterface $passwordEncoder, Video $video)
     {
-        $em = $this->getDoctrine()->getManager();
         $users = $this->getDoctrine()->getRepository(SecurityUser::class)->findAll();
+        dump($video);
+        $this->denyAccessUnlessGranted('VIDEO_DELETE', $video);
         dump($users);
-
-        $user = new SecurityUser();
-        $user->setEmail('admin1@email.ru');
-        $user->setPassword(
-            $passwordEncoder->encodePassword($user, '1234')
-        );
-        $user->setRoles(['ROLE_ADMIN']);
-
-        $video = new Video();
-        $video->setTitle('video title');
-        $video->setFile('video path');
-        $video->setCreatedAt(new \DateTime());
-        $em->persist($video);
-
-        $user->addVideo($video);
-
-        $em->persist($user);
-        $em->flush();
-
-        dump($user->getId());
-        dump($video->getId());
-
         return $this->render('default/status.html.twig', ['status' => 'ok']);
     }
-
 }

@@ -2,6 +2,9 @@
 
 {% block body %}
     {{ status }}
+    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+        role admin
+    {% endif %}
 {% endblock %}
 
 {% block title %}
