@@ -1,10 +1,14 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    {{ status }}
+    <h1>{{ status }}</h1>
     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
         role admin
     {% endif %}
+
+    <a href="{{ path('login') }}">awesome link</a>
+    {{ 'some.key'|trans|raw }}
+
 {% endblock %}
 
 {% block title %}

@@ -1,1 +1,3 @@
 set title: set title
+some:
+    key: Symfony is <b>great</b>

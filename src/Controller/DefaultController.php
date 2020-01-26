@@ -422,4 +422,14 @@ class DefaultController extends AbstractController
         dump($users);
         return $this->render('default/status.html.twig', ['status' => 'ok']);
     }
+
+    /**
+     * @return Response
+     * @Route("status-show")
+     */
+    public function statusAction()
+    {
+        return $this->render('default/status.html.twig', ['status' => 'ok']);
+    }
+
 }
