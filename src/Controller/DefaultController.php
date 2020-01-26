@@ -30,6 +30,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\Cache\ItemInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class DefaultController extends AbstractController
 {
@@ -296,14 +297,6 @@ class DefaultController extends AbstractController
     }
 
     /**
-     * @Route({"nl": "/over-ons","en":"about-us"}, name="about_us")
-     */
-    public function index3()
-    {
-        return new Response('Translated routes');
-    }
-
-    /**
      * @Route("/generate_url/{param?}",name="generate-url")
      */
     public function generateUrlAction($param)
@@ -394,7 +387,10 @@ class DefaultController extends AbstractController
     /**
      * @param AuthenticationUtils $authenticationUtils
      * @return Response
-     * @Route("/login", name="login")
+     * @Route({
+     *     "en": "login",
+     *     "ru": "вход"
+     * }, name="login")
      */
     public function login(AuthenticationUtils $authenticationUtils)
     {
@@ -424,11 +420,14 @@ class DefaultController extends AbstractController
     }
 
     /**
+     * @param TranslatorInterface $translator
      * @return Response
      * @Route("status-show")
      */
-    public function statusAction()
+    public function statusAction(TranslatorInterface $translator)
     {
+        $translated = $translator->trans('some.key');
+        dump($translated);
         return $this->render('default/status.html.twig', ['status' => 'ok']);
     }
 

@@ -9,6 +9,8 @@
     <a href="{{ path('login') }}">awesome link</a>
     {{ 'some.key'|trans|raw }}
 
+    {{ 'symfony.learning'|transchoice(5) }}
+
 {% endblock %}
 
 {% block title %}
