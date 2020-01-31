@@ -46,11 +46,15 @@ class ToDoListController extends AbstractController
 
     /**
      * @Route("/switch_status/{id}", name="switch_status")
-     * @param int $id
+     * @param Task $task
+     * @return RedirectResponse
      */
-    public function switchStatus(int $id)
+    public function switchStatus(Task $task)
     {
-        exit('switch hi hi hi - ' . $id);
+        $em = $this->getDoctrine()->getManager();
+        $task->setStatus(!$task->getStatus());
+        $em->flush();
+        return $this->redirectToRoute('to_do_list');
     }
 
     /**
