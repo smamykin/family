@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Task;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -14,14 +15,16 @@ class ToDoListController extends AbstractController
      */
     public function index()
     {
-        return $this->render('to_do_list/index.html.twig', [
-            'controller_name' => 'ToDoListController',
-        ]);
+
+        $tasks = $this->getDoctrine()->getRepository(Task::class)->findBy([], ['id' => 'DESC']);
+
+        return $this->render('to_do_list/index.html.twig', ['tasks' => $tasks]);
     }
 
     /**
      * @Route("/create", name="create_task", methods={"POST"})
      * @param Request $request
+     * @return RedirectResponse
      */
     public function create(Request $request)
     {
