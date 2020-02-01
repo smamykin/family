@@ -2,22 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a719000e-32f1-4bd5-99a1-6e422e2965da" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/family.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/family.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Controller/ToDoListController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/ToDoListController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Entity/Category.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Entity/Photo.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Entity/Post.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Entity/PostPhoto.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Entity/PostSetting.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Entity/SettingOption.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Migrations/Version20191021154450.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Repository/CategoryRepository.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Repository/PhotoRepository.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Repository/PostPhotoRepository.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Repository/PostRepository.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Repository/PostSettingRepository.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Repository/SettingOptionRepository.php" beforeDir="false" />
     </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -195,7 +185,7 @@
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="settings.editor.selected.configurable" value="Errors" />
+    <property name="settings.editor.selected.configurable" value="settings.php.quality.tools" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -207,15 +197,15 @@
       <recent name="$PROJECT_DIR$/src/Resources" />
     </key>
   </component>
-  <component name="ServiceViewManager">
-    <option name="viewStates">
+  <component name="RunDashboard">
+    <option name="ruleStates">
       <list>
-        <serviceView>
-          <treeState>
-            <expand />
-            <select />
-          </treeState>
-        </serviceView>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
       </list>
     </option>
   </component>
@@ -251,6 +241,7 @@
       <workItem from="1580135238463" duration="1242000" />
       <workItem from="1580396807936" duration="1488000" />
       <workItem from="1580482133817" duration="1907000" />
+      <workItem from="1580550880046" duration="509000" />
     </task>
     <task id="LOCAL-00001" summary="Здесь будем складывать наш src код для фронта">
       <created>1571758292006</created>
