@@ -1,6 +1,5 @@
-<?php include('includes/_header.php'); ?>
-<?php include('includes/_menu.php'); ?>
-
+{% extends 'base.html.twig' %}
+{% block main %}
 <br>
 <h1>Video title</h1>
 <div align="center" class="embed-responsive embed-responsive-16by9">
@@ -12,22 +11,21 @@
 <div class="row m-2">
     <a id="video_comments"></a>
 
-    <?php for ($i = 1; $i <= 6; $i++) : ?>
+    {% for i in 1..6 %}
 
-    <ul class="list-unstyled text-left">
-        <li class="media">
-            <img class="mr-3" src="assets/images/user.jpg" alt="Generic placeholder image">
-            <div class="media-body">
-                <h5 class="mt-0 mb-1"><b>John Doe</b> <small class="text-muted">added a comment <small><b>3 days ago</b></small></small></h5>
-                Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus
-                odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate
-                fringilla. Donec lacinia congue felis in faucibus.
-            </div>
-        </li>
-    </ul>
-    <hr>
-
-    <?php endfor; ?>
+        <ul class="list-unstyled text-left">
+            <li class="media">
+                <img class="mr-3" src="{{ asset('images/user.jpg') }}" alt="Generic placeholder image">
+                <div class="media-body">
+                    <h5 class="mt-0 mb-1"><b>John Doe</b> <small class="text-muted">added a comment <small><b>3 days ago</b></small></small></h5>
+                    Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus
+                    odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate
+                    fringilla. Donec lacinia congue felis in faucibus.
+                </div>
+            </li>
+        </ul>
+        <hr>
+    {% endfor %}
 
 </div>
 
@@ -43,7 +41,4 @@
         </form>
     </div>
 </div>
-
-
-<?php include('includes/_footer_links.php'); ?>
-<?php include('includes/_footer.php'); ?>
+{% endblock main %}
