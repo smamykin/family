@@ -1,5 +1,10 @@
-<?php include('includes/_header.php'); ?>
-
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('login') }}
+{% endblock %}
+{% block menu %}{% endblock %}
+{% block main %}
 <link rel="stylesheet" href="assets/css/login.css">
 
 <form method="POST" action="#" class="form-signin">
@@ -14,7 +19,12 @@
         </label>
     </div>
     <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-    <p class="mt-5 mb-3 text-muted">&copy; 2017-2018 <a href="index.php">main page</a></p>
+    <p class="mt-5 mb-3 text-muted">&copy; 2017-2018 <a href="{{ path('main_page') }}">main page</a></p>
 </form>
 
 <?php include('includes/_footer.php'); ?>
+{% endblock %}
+{% block footer_links %}{% endblock %}
+{% block javascripts %}
+    {{ encore_entry_script_tags('login') }}
+{% endblock %}
