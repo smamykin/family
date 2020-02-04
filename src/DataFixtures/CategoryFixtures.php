@@ -10,6 +10,12 @@ use InvalidArgumentException;
 class CategoryFixtures extends Fixture
 {
     private const ELECTRONICS = 'Electronics';
+    private const COMPUTERS = 'Computers';
+    private const LAPTOPS = 'Laptops';
+    private const BOOKS = 'Books';
+    private const MOVIES = 'Movies';
+    private const ROMANCE = 'Romance';
+
     /**
      * @var array
      */
@@ -19,13 +25,20 @@ class CategoryFixtures extends Fixture
     {
         $this->data = [
             self::ELECTRONICS => $this->getElectronicsData(),
+            self::COMPUTERS => $this->getComputersData(),
+            self::LAPTOPS => $this->getLaptopsData(),
+            self::BOOKS => $this->getBooksData(),
+            self::MOVIES => $this->getMoviesData(),
+            self::ROMANCE => $this->getRomanceData(),
         ];
     }
 
     public function load(ObjectManager $manager)
     {
         $this->loadMainCategories($manager);
-        $this->loadSubcategoriesData($manager, null, self::ELECTRONICS);
+        foreach ($this->data as $key => $v) {
+            $this->loadSubcategoriesData($manager, null, $key);
+        }
     }
 
     private function loadMainCategories(ObjectManager $manager)
@@ -41,6 +54,7 @@ class CategoryFixtures extends Fixture
 
     private function loadSubcategoriesData(ObjectManager $manager, $category, $parentName)
     {
+        /** @var Category $parent */
         $parent = $manager->getRepository(Category::class)->findOneBy(['name' => $parentName]);
 
         if (empty($parent)) {
@@ -62,8 +76,8 @@ class CategoryFixtures extends Fixture
         return [
             [self::ELECTRONICS,1],
             ['Toys',2],
-            ['Books',3],
-            ['Movies',4],
+            [self::BOOKS, 3],
+            [self::MOVIES, 4],
         ];
     }
 
@@ -71,8 +85,51 @@ class CategoryFixtures extends Fixture
     {
         return [
             ['Cameras',5],
-            ['Computers',6],
+            [self::COMPUTERS,6],
             ['Cell Phones',7],
+        ];
+    }
+
+    private function getComputersData()
+    {
+        return [
+            [self::LAPTOPS, 8],
+            ['Desktops', 9],
+        ];
+    }
+
+    private function getLaptopsData()
+    {
+        return [
+            ['Apple', 10],
+            ['Asus', 11],
+            ['Dell', 12],
+            ['Lenovo', 13],
+            ['Hp', 14],
+        ];
+    }
+
+    private function getBooksData()
+    {
+        return [
+            ['Children\'s books', 15],
+            ['Kindle eBooks', 16],
+        ];
+    }
+
+    private function getMoviesData()
+    {
+        return [
+            ['Family', 17],
+            [self::ROMANCE, 18],
+        ];
+    }
+
+    private function getRomanceData()
+    {
+        return [
+            ['Romantic Comedy', 19],
+            ['Romantic Drama', 20],
         ];
     }
 

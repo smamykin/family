@@ -26,11 +26,12 @@ class Category
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="subcategories")
+     * @ORM\JoinColumn(name="parent", referencedColumnName="id",  onDelete="SET NULL")
      */
     private $parent;
 
     /**
-     * @ORM\OneToMany( targetEntity="App\Entity\Category", mappedBy="parent")
+     * @ORM\OneToMany(targetEntity="App\Entity\Category", mappedBy="parent")
      */
     private $subcategories;
 
