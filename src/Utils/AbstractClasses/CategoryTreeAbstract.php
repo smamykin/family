@@ -2,6 +2,7 @@
 
 namespace App\Utils\AbstractClasses;
 
+use App\Twig\AppExtension;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -15,7 +16,7 @@ abstract class CategoryTreeAbstract
     /**
      * @var string
      */
-    protected $categoryList;
+    public $categorylist;
     /**
      * @var EntityManagerInterface
      */
