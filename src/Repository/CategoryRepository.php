@@ -5,6 +5,8 @@ namespace App\Repository;
 use App\Entity\Category;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 
 /**
  * @method Category|null find($id, $lockMode = null, $lockVersion = null)
@@ -36,15 +38,19 @@ class CategoryRepository extends ServiceEntityRepository
     }
     */
 
-    /*
-    public function findOneBySomeField($value): ?Category
+    /**
+     *
+     * @param $value
+     * @return Category|null
+     * @throws NoResultException|NonUniqueResultException
+     */
+    public function findOneByIdNotEqual($value): ?Category
     {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
+        $result =  $this->createQueryBuilder('c')
+            ->andWhere('c.id != :val')
             ->setParameter('val', $value)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getResult();
+        return reset($result);
     }
-    */
 }
