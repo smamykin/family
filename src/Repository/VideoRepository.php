@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Video;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
 
 /**
@@ -44,13 +45,41 @@ class VideoRepository extends ServiceEntityRepository
     }
     */
 
-    public function findByChildIds(array $value, int $page): \Knp\Component\Pager\Pagination\PaginationInterface
+    public function findByChildIds(array $value, int $page, ?string $sortMethod): PaginationInterface
     {
+        $sortMethod = $sortMethod != 'rating' ? $sortMethod : 'ASC'; //todo
         $query = $this->createQueryBuilder('v')
             ->andWhere('v.category IN (:val)')
             ->setParameter('val', $value)
+            ->orderBy('v.title', $sortMethod)
             ->getQuery();
 
         return $this->paginator->paginate($query, $page, 5);
+    }
+
+    public function findByTitle(string $query, int $page, ?string $sort_method)
+    {
+        $sort_method = $sort_method != 'rating' ? $sort_method : 'ASC'; // tmp
+
+        $queryBuilder = $this->createQueryBuilder('v');
+        $searchTerms = $this->prepareQuery($query);
+
+        foreach ($searchTerms as $key => $term)
+        {
+            $queryBuilder
+                ->orWhere('v.title LIKE :t_'.$key)
+                ->setParameter('t_'.$key, '%'.trim($term).'%');
+        }
+
+        $dbquery =  $queryBuilder
+            ->orderBy('v.title', $sort_method)
+            ->getQuery();
+
+        return $this->paginator->paginate($dbquery, $page, 5);
+    }
+
+    private function prepareQuery(string $query): array
+    {
+        return explode(' ',$query);
     }
 }
