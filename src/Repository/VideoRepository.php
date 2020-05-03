@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Video;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Knp\Component\Pager\PaginatorInterface;
 
 /**
  * @method Video|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,9 +15,16 @@ use Doctrine\Common\Persistence\ManagerRegistry;
  */
 class VideoRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    /**
+     * @var PaginatorInterface
+     */
+    private $paginator;
+
+    public function __construct(ManagerRegistry $registry, PaginatorInterface $paginator)
     {
         parent::__construct($registry, Video::class);
+
+        $this->paginator = $paginator;
     }
 
     // /**
@@ -36,15 +44,13 @@ class VideoRepository extends ServiceEntityRepository
     }
     */
 
-    /*
-    public function findOneBySomeField($value): ?Video
+    public function findByChildIds(array $value, int $page): \Knp\Component\Pager\Pagination\PaginationInterface
     {
-        return $this->createQueryBuilder('v')
-            ->andWhere('v.exampleField = :val')
+        $query = $this->createQueryBuilder('v')
+            ->andWhere('v.category IN (:val)')
             ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getQuery();
+
+        return $this->paginator->paginate($query, $page, 5);
     }
-    */
 }
