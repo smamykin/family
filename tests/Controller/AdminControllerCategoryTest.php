@@ -21,11 +21,26 @@ class AdminControllerCategoryTest extends WebTestCase
      * @var EntityManagerInterface|null
      */
     private $em;
+    private $categoryUrl;
+    private $categoryEditUrl;
+    private $deleteCategoryUrl;
+
+    public function __construct($name = null, array $data = [], $dataName = '')
+    {
+        parent::__construct($name, $data, $dataName);
+
+        $this->deleteCategoryUrl = '/admin/su/delete_category/';
+        $this->categoryEditUrl = '/admin/su/edit_category/';
+        $this->categoryUrl = '/admin/su/categories';
+    }
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->client = static::createClient();
+        $this->client = static::createClient([],[
+            'PHP_AUTH_USER' => 'jw@symf4.loc',
+            'PHP_AUTH_PW' => 'passw',
+        ]);
         $this->client->disableReboot();
         $this->em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         $this->em->beginTransaction();
@@ -42,20 +57,20 @@ class AdminControllerCategoryTest extends WebTestCase
 
     public function testTextOnPage()
     {
-        $crawler = $this->client->request('GET', '/admin/categories');
+        $crawler = $this->client->request('GET', $this->categoryUrl);
         $this->assertSame('Categories list', $crawler->filter('h2')->text());
         $this->assertStringContainsString('Electronics', $this->client->getResponse()->getContent());
     }
 
     public function testNumberOfItems()
     {
-        $crawler = $this->client->request('GET', '/admin/categories');
+        $crawler = $this->client->request('GET', $this->categoryUrl);
         $this->assertCount(21, $crawler->filter('option'));
     }
 
     public function testNewCategory()
     {
-        $crawler = $this->client->request('GET', '/admin/categories');
+        $crawler = $this->client->request('GET', $this->categoryUrl);
         $rep = $this->em->getRepository(Category::class);
         /** @var Category $parent */
         $parent = $rep->findOneBy([]);
@@ -82,7 +97,7 @@ class AdminControllerCategoryTest extends WebTestCase
         $rep = $this->em->getRepository(Category::class);
         $parent = $rep->findOneBy([]);
         $cat = $rep->findOneByIdNotEqual($parent->getId());
-        $crawler = $this->client->request('GET', '/admin/edit_category/' . $cat->getId());
+        $crawler = $this->client->request('GET', $this->categoryEditUrl . $cat->getId());
         /** @var Category $parent */
         $form = $crawler->selectButton('Save')->form(
             [
@@ -102,7 +117,7 @@ class AdminControllerCategoryTest extends WebTestCase
         $rep = $this->em->getRepository(Category::class);
         $cat = $rep->findOneBy([]);
         $id = $cat->getId();
-        $crawler = $this->client->request('GET', '/admin/delete_category/' . $id);
+        $crawler = $this->client->request('GET', $this->deleteCategoryUrl . $id);
 
         $category = $rep->find($id);
         $this->assertNull($category);

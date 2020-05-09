@@ -20,7 +20,7 @@
 })();
 
 
-var password = document.getElementById("password"), confirm_password = document.getElementById("confirm_password");
+var password = document.getElementById("user_password_first"), confirm_password = document.getElementById("user_password_second");
 
 function validatePassword() {
     if (password.value != confirm_password.value) {

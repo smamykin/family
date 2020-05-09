@@ -30,7 +30,7 @@ class Category
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="subcategories")
-     * @ORM\JoinColumn(name="parent", referencedColumnName="id",  onDelete="SET NULL")
+     * @ORM\JoinColumn(name="parent", referencedColumnName="id",  onDelete="CASCADE")
      */
     private $parent;
 
