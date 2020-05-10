@@ -4,15 +4,16 @@ namespace App\Tests\Controller;
 
 use App\Entity\Category;
 use App\Repository\CategoryRepository;
+use App\Tests\Rollback;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class AdminControllerCategoryTest extends WebTestCase
 {
+    use Rollback;
     /**
      * @var KernelBrowser
      */
@@ -32,27 +33,6 @@ class AdminControllerCategoryTest extends WebTestCase
         $this->deleteCategoryUrl = '/admin/su/delete_category/';
         $this->categoryEditUrl = '/admin/su/edit_category/';
         $this->categoryUrl = '/admin/su/categories';
-    }
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->client = static::createClient([],[
-            'PHP_AUTH_USER' => 'jw@symf4.loc',
-            'PHP_AUTH_PW' => 'passw',
-        ]);
-        $this->client->disableReboot();
-        $this->em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
-        $this->em->beginTransaction();
-        $this->em->getConnection()->setAutoCommit(false);
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-        $this->em->rollback();
-        $this->em->close();
-        $this->em = null;
     }
 
     public function testTextOnPage()

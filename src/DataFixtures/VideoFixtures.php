@@ -11,6 +11,7 @@ use Doctrine\Persistence\ObjectManager;
 class VideoFixtures extends Fixture
 {
     private const BASE_PATH = 'https://player.vimeo.com/video/';
+    const VIDEO_REFERENCE = 'simple-video';
 
     /**
      * @param ObjectManager $manager
@@ -18,6 +19,7 @@ class VideoFixtures extends Fixture
      */
     public function load(ObjectManager $manager)
     {
+        $i =1;
         foreach ($this->videoData($manager) as [$title, $path, $categoryId]) {
             $duration = random_int(10, 300);
             $category = $manager->getRepository(Category::class)->find($categoryId);
@@ -28,6 +30,8 @@ class VideoFixtures extends Fixture
                 ->setCategory($category)
                 ->setDuration($duration);
             $manager->persist($video);
+
+            $this->addReference(self::VIDEO_REFERENCE . $i++, $video);
         }
 
         $manager->flush();

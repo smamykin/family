@@ -9,6 +9,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserFixtures extends Fixture
 {
+    const USER_REFERENCE = 'simple-user';
     /**
      * @var UserPasswordEncoderInterface
      */
@@ -21,6 +22,7 @@ class UserFixtures extends Fixture
 
     public function load(ObjectManager $manager)
     {
+        $i = 1;
         foreach ($this->getUserData() as [$name, $lastName, $email, $password, $apiKey, $roles]) {
             $user = new User();
             $user->setName($name);
@@ -30,6 +32,7 @@ class UserFixtures extends Fixture
             $user->setVimeoApiKey($apiKey);
             $user->setRoles($roles);
             $manager->persist($user);
+            $this->addReference(self::USER_REFERENCE . $i++, $user);
         }
         $manager->flush();
     }

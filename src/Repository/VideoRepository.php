@@ -82,4 +82,16 @@ class VideoRepository extends ServiceEntityRepository
     {
         return explode(' ',$query);
     }
+
+    public function videoDetails($id)
+    {
+        return $this->createQueryBuilder('v')
+            ->leftJoin('v.comments', 'c')
+            ->leftJoin('c.user', 'u')
+            ->addSelect('c', 'c')
+            ->where('v.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }
