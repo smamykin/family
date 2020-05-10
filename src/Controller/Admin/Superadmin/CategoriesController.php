@@ -1,12 +1,10 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Admin\Superadmin;
 
 use App\Entity\Category;
-use App\Entity\Video;
 use App\Form\CategoryType;
 use App\Utils\CategoryTreeAdminList;
-use App\Utils\CategoryTreeAdminOptionList;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,20 +12,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/admin")
+ * @Route("/admin/su")
  */
-class AdminController extends AbstractController
+class CategoriesController extends AbstractController
 {
-    /**
-     * @Route("/", name="admin_main_page")
-     */
-    public function index()
-    {
-        return $this->render('admin/my_profile.html.twig');
-    }
 
     /**
-     * @Route("/su/categories", name="categories", methods={"GET", "POST"})
+     * @Route("/categories", name="categories", methods={"GET", "POST"})
      * @param CategoryTreeAdminList $categoryTreeAdminList
      * @param Request $request
      * @return Response
@@ -54,38 +45,7 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/videos", name="videos")
-     */
-    public function videos()
-    {
-        if ($this->isGranted('ROLE_ADMIN')) {
-            $videos = $this->getDoctrine()->getRepository(Video::class)->findAll();
-        } else {
-            $videos = $this->getUser()->getLikedVideos();
-        }
-        return $this->render('admin/videos.html.twig', [
-            'videos' => $videos,
-        ]);
-    }
-
-    /**
-     * @Route("/su/upload-video", name="upload_video")
-     */
-    public function upload_video()
-    {
-        return $this->render('admin/upload_video.html.twig');
-    }
-
-    /**
-     * @Route("/su/users", name="users")
-     */
-    public function users()
-    {
-        return $this->render('admin/users.html.twig');
-    }
-
-    /**
-     * @Route("/su/edit_category/{id}", name="edit_category")
+     * @Route("/edit_category/{id}", name="edit_category")
      * @param Category $category
      * @param Request $request
      * @return Response
@@ -109,7 +69,7 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/su/delete_category/{id}", name="delete_category")
+     * @Route("/delete_category/{id}", name="delete_category")
      * @param Category $category
      * @return Response
      */
@@ -119,22 +79,6 @@ class AdminController extends AbstractController
         $em->remove($category);
         $em->flush();
         return $this->redirectToRoute('categories');
-    }
-
-    public function getAllCategories(
-        CategoryTreeAdminOptionList $categoryTreeAdminOptionList,
-        Category $editedCategory = null
-    ) {
-
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-        $categoryTreeAdminOptionList->getCategoryList($categoryTreeAdminOptionList->buildTree());
-        return $this->render(
-            'admin/_all_categories.html.twig',
-            [
-                'categories' => $categoryTreeAdminOptionList->categorylist,
-                'editedCategory' => $editedCategory,
-            ]
-        );
     }
 
     /**
