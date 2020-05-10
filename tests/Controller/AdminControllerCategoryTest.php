@@ -4,7 +4,7 @@ namespace App\Tests\Controller;
 
 use App\Entity\Category;
 use App\Repository\CategoryRepository;
-use App\Tests\Rollback;
+use App\Tests\RollAdmin;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
@@ -13,7 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class AdminControllerCategoryTest extends WebTestCase
 {
-    use Rollback;
+    use RollAdmin;
     /**
      * @var KernelBrowser
      */

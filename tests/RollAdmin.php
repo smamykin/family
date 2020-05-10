@@ -5,7 +5,7 @@ namespace App\Tests;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
-trait Rollback
+trait RollAdmin
 {
     /**
      * @var ObjectManager

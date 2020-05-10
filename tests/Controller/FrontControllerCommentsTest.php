@@ -8,7 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class FrontControllerCommentsTest extends WebTestCase
 {
-    use Rollback;
+    use RollAdmin;
 
     public function testCannotCommentWithoutAuth()
     {
