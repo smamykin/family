@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Category;
+use App\Entity\User;
 use App\Entity\Video;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\ORM\EntityManagerInterface;
@@ -35,6 +36,10 @@ class VideoFixtures extends Fixture
         }
 
         $manager->flush();
+
+
+        $this->loadLikes($manager);
+        $this->loadDislikes($manager);
     }
 
     private function videoData(ObjectManager $manager)
@@ -68,6 +73,61 @@ class VideoFixtures extends Fixture
             ['Toys  4', 289729765, $toyId],
             ['Toys  5', 289729765, $toyId],
             ['Toys  6', 289729765, $toyId]
+        ];
+    }
+
+    private function loadLikes(ObjectManager $manager)
+    {
+        foreach ($this->likesData() as [$videoRef, $userRef]) {
+            /** @var Video $video */
+            $video = $this->getReference($videoRef);
+            /** @var User $user */
+            $user = $this->getReference($userRef);
+            $video->addUsersThatLike($user);
+            $manager->persist($video);
+        }
+        $manager->flush();
+    }
+
+    private function loadDislikes(ObjectManager $manager)
+    {
+        foreach ($this->dislikesData() as [$videoRef, $userRef]) {
+            /** @var Video $video */
+            $video = $this->getReference($videoRef);
+            /** @var User $user */
+            $user = $this->getReference($userRef);
+            $video->addUsersThatDontLike($user);
+            $manager->persist($video);
+        }
+        $manager->flush();
+    }
+
+    private function likesData()
+    {
+        return [
+            [self::VIDEO_REFERENCE . 12, UserFixtures::USER_REFERENCE . 1],
+            [self::VIDEO_REFERENCE . 12, UserFixtures::USER_REFERENCE . 2],
+            [self::VIDEO_REFERENCE . 12, UserFixtures::USER_REFERENCE . 3],
+
+
+            [self::VIDEO_REFERENCE . 11, UserFixtures::USER_REFERENCE . 1],
+            [self::VIDEO_REFERENCE . 11, UserFixtures::USER_REFERENCE . 2],
+
+            [self::VIDEO_REFERENCE . 1, UserFixtures::USER_REFERENCE . 1],
+            [self::VIDEO_REFERENCE . 1, UserFixtures::USER_REFERENCE . 2],
+            [self::VIDEO_REFERENCE . 1, UserFixtures::USER_REFERENCE . 3],
+
+            [self::VIDEO_REFERENCE . 2, UserFixtures::USER_REFERENCE . 1],
+            [self::VIDEO_REFERENCE . 2, UserFixtures::USER_REFERENCE . 2],
+        ];
+    }
+
+    private function dislikesData()
+    {
+        return [
+            [self::VIDEO_REFERENCE . 10, UserFixtures::USER_REFERENCE . 1],
+            [self::VIDEO_REFERENCE . 10, UserFixtures::USER_REFERENCE . 2],
+            [self::VIDEO_REFERENCE . 10, UserFixtures::USER_REFERENCE . 3],
         ];
     }
 }
