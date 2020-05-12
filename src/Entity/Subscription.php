@@ -82,7 +82,7 @@ class Subscription
     private $payment_status;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=true)
      */
     private $free_plan_used;
 

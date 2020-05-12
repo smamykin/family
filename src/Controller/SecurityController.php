@@ -3,15 +3,15 @@
 
 namespace App\Controller;
 
-use App\Entity\Category;
-use App\Entity\Comment;
+use App\Controller\Traits\SaveSubscription;
+use App\Entity\Subscription;
 use App\Entity\User;
-use App\Entity\Video;
 use App\Form\UserType;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -19,14 +19,23 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController
 {
+    use SaveSubscription;
+
     /**
-     * @Route("/register", name="register")
+     * @Route("/register/{plan}", name="register", defaults={"plan": null})
      * @param Request $request
      * @param UserPasswordEncoderInterface $passwordEncoder
+     * @param SessionInterface $session
+     * @param $plan
      * @return Response
      */
-    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, SessionInterface $session, $plan)
     {
+        if ($request->isMethod('GET')) {
+            $session->set('planName', $plan);
+            $session->set('planPrice', Subscription::getPlanDataPriceByName($plan));
+        }
+
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
@@ -42,6 +51,18 @@ class SecurityController extends AbstractController
                 ->setRoles(['ROLE_USER'])
             ;
 
+            $date = new \DateTime();
+            $date->modify('+1 month');
+            $subscription = new Subscription();
+            $subscription->setValidTo($date)
+                ->setPlan($session->get('planName'));
+
+            if ($plan == Subscription::getPlanDataNameByIndex(0)) {
+                $subscription->setFreePlanUsed(true)
+                    ->setPaymentStatus('paid');
+            }
+            $user->setSubscription($subscription);
+
             $objectManager = $this->getDoctrine()->getManager();
             $objectManager->persist($user);
             $objectManager->flush();
@@ -49,6 +70,13 @@ class SecurityController extends AbstractController
             $this->loginUserAutomatically($user, $plainPassword);
 
             return $this->redirectToRoute('admin_main_page');
+        }
+
+        if ($this->isGranted('IS_AUTHENTICATED_REMEMBERED') && $plan == Subscription::getPlanDataNameByIndex(0)) {
+            $this->saveSubscription($plan, $this->getUser());
+            return $this->redirectToRoute('admin_main_page');
+        } elseif ($this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            return $this->redirectToRoute('payment');
         }
         return $this->render('front/register.html.twig', [
             'form' => $form->createView()
