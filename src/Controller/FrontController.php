@@ -9,6 +9,7 @@ use App\Entity\Video;
 use App\Form\UserType;
 use App\Repository\VideoRepository;
 use App\Utils\CategoryTreeFrontPage;
+use App\Utils\VideoForNoValidSubscription;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -38,9 +39,10 @@ class FrontController extends AbstractController
      * @param $page
      * @param CategoryTreeFrontPage $categoryTreeFrontPage
      * @param Request $request
+     * @param VideoForNoValidSubscription $video_no_members
      * @return Response
      */
-    public function videoList($id, $page, CategoryTreeFrontPage $categoryTreeFrontPage, Request $request)
+    public function videoList($id, $page, CategoryTreeFrontPage $categoryTreeFrontPage, Request $request, VideoForNoValidSubscription $video_no_members)
     {
         $categoryTreeFrontPage->getCategoryListAndParent($id);
         $ids = $categoryTreeFrontPage->getChildIds($id);
@@ -52,7 +54,8 @@ class FrontController extends AbstractController
 
         return $this->render('front/video_list.html.twig', [
             'subcategories' => $categoryTreeFrontPage,
-            'videos' => $videos
+            'videos' => $videos,
+            'video_no_members' => $video_no_members->check(),
         ]);
     }
 
@@ -60,12 +63,14 @@ class FrontController extends AbstractController
      * @Route("/video-details/{video}", name="video_details")
      * @param VideoRepository $repo
      * @param Video $video
+     * @param VideoForNoValidSubscription $video_no_members
      * @return Response
      */
-    public function videoDetails(VideoRepository $repo, $video)
+    public function videoDetails(VideoRepository $repo, $video, VideoForNoValidSubscription $video_no_members)
     {
         return $this->render('front/video_details.html.twig', [
             'video'=> $repo->videoDetails($video),
+            'video_no_members' => $video_no_members->check(),
         ]);
     }
 
@@ -73,9 +78,10 @@ class FrontController extends AbstractController
      * @Route("/search-results/{page}", methods={"GET"}, defaults={"page": "1"}, name="search_results")
      * @param $page
      * @param Request $request
+     * @param VideoForNoValidSubscription $video_no_members
      * @return Response
      */
-    public function searchResults($page, Request $request)
+    public function searchResults($page, Request $request, VideoForNoValidSubscription $video_no_members)
     {
         $videos = null;
         $query = null;
@@ -89,16 +95,9 @@ class FrontController extends AbstractController
         return $this->render('front/search_results.html.twig', [
             'videos' => $videos,
             'query' => $query,
+            'video_no_members' => $video_no_members->check(),
 
         ]);
-    }
-
-    /**
-     * @Route("/pricing", name="pricing")
-     */
-    public function pricing()
-    {
-        return $this->render('front/pricing.html.twig');
     }
 
     /**
@@ -182,6 +181,4 @@ class FrontController extends AbstractController
 
         return $this->json(['action' => $result,'id'=>$video->getId()]);
     }
-
-
 }
