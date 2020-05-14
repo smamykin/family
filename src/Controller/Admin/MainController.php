@@ -110,7 +110,7 @@ class MainController extends AbstractController
     }
 
     /**
-     * @Route("delete-accaunt", name="delete_account")
+     * @Route("/delete-account", name="delete_account")
      */
     public function deleteAccount()
     {
