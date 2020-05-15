@@ -50,6 +50,36 @@ class SuperAdminController extends AbstractController
     }
 
     /**
+     * @Route("/delete-video/{video}/{path}", name="delete_video", requirements={"path"=".+"})
+     * @param Video $video
+     * @param $path
+     * @param UploaderInterface $fileUploader
+     * @return RedirectResponse
+     */
+    public function deleteVideo(Video $video, $path, UploaderInterface $fileUploader)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($video);
+        $em->flush();
+
+        if ($fileUploader->delete($path)) {
+            $this->addFlash(
+                'success',
+                'The video was successfully deleted.'
+            );
+        } else {
+            $this->addFlash(
+                'danger',
+                'We were not able to delete. Check the video.'
+            );
+        }
+
+        return $this->redirectToRoute('videos');
+
+    }
+
+    /**
      * @Route("/users", name="users")
      */
     public function users()
