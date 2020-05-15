@@ -5,6 +5,7 @@ namespace App\Controller\Admin\Superadmin;
 use App\Entity\Category;
 use App\Form\CategoryType;
 use App\Utils\CategoryTreeAdminList;
+use App\Utils\CategoryTreeAdminOptionList;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -98,6 +99,22 @@ class CategoriesController extends AbstractController
         $em->persist($category);
         $em->flush();
 
+    }
+
+
+    public function getAllCategories(
+        CategoryTreeAdminOptionList $categoryTreeAdminOptionList,
+        Category $editedCategory = null
+    ) {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $categoryTreeAdminOptionList->getCategoryList($categoryTreeAdminOptionList->buildTree());
+        return $this->render(
+            'admin/_all_categories.html.twig',
+            [
+                'categories' => $categoryTreeAdminOptionList->categorylist,
+                'editedCategory' => $editedCategory,
+            ]
+        );
     }
 
     private function isSaveCategory(FormInterface $form, Request $request, Category $category) {

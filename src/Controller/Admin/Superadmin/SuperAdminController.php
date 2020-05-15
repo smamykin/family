@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin\Superadmin;
 
+use App\Entity\Category;
 use App\Entity\User;
 use App\Entity\Video;
 use App\Form\VideoType;
@@ -102,4 +103,26 @@ class SuperAdminController extends AbstractController
 
         return $this->redirectToRoute('users');
     }
+
+    /**
+     * @Route("/update-video-category/{video}", methods={"POST"}, name="update_video_category")
+     * @param Request $request
+     * @param Video $video
+     * @return RedirectResponse
+     */
+    public function updateVideoCategory(Request $request, Video $video)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        /** @var Category $category */
+        $category = $this->getDoctrine()->getRepository(Category::class)->find($request->request->get('video_category'));
+
+        $video->setCategory($category);
+
+        $em->persist($video);
+        $em->flush();
+
+        return $this->redirectToRoute('videos');
+    }
+
 }

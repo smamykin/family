@@ -5,9 +5,9 @@
             {% for video in videos %}
                 {# video \App\Entity\Video #}
                 {% if video_no_members is not null %}
-                    {% set videoid = 'https://player.vimeo.com/video/' ~ video_no_members %}
+                    {% set videoid = video_no_members %}
                 {% else %}
-                    {% set videoid = video.vimeoId(app.user) %}
+                    {% set videoid = video.path %}
                 {% endif %}
                 <div class="col-md-4">
                     <div class="card mb-4 shadow-sm">

@@ -19,7 +19,7 @@
     {% endif %}
 
 
-    {{ form_start(form,{'attr': {'novalidate':'novalidate'}}) }}
+    {{ form_start(form) }}
 
     {% if is_granted('ROLE_ADMIN') %}
         <div class="form-group">
@@ -59,7 +59,7 @@
         {{ form_widget(form.password.first, {'attr':{'class': is_invalid}}) }}
 
         <div class="invalid-feedback">
-            {{ form_errors(form.password.first) }}
+            {{ form_errors(form.password.first, {'attr': {'class': is_invalid, 'required': 'required'}}) }}
         </div>
     </div>
     <div class="form-group">
