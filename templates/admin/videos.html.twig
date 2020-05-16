@@ -31,7 +31,7 @@
             }) }}">go to video</a>
 
       {% if is_granted('ROLE_ADMIN') and video.duration is null %}
-          <a href="{{ path('set_video_duration', {'video':video.id, 'vimeo_id': video.vimeoId}) }}">set duration</a></td>
+          <a href="{{ path('set_video_duration', {'video':video.id, 'vimeoId': video.vimeoId}) }}">set duration</a></td>
       {% endif %}
       {% if is_granted('ROLE_ADMIN') %}
         <td>

@@ -30,6 +30,7 @@ class AdminControllerSecurityTest extends WebTestCase
         yield ['GET', '/admin/su/delete_category/1'];
         yield ['GET', '/admin/su/users'];
         yield ['GET', '/admin/su/upload-video-locally'];
+        yield ['GET', '/admin/su/upload-video-by-vimeo'];
     }
 
     public function testAdminSu()

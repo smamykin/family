@@ -55,3 +55,7 @@ services:
         arguments:
             $targetDirectory: '%video_directory%'
 
+    App\Listeners\NewVideoListener:
+        tags:
+            - {name: 'doctrine.event_listener', event: 'postPersist'}
+
