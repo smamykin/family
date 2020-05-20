@@ -1,0 +1,22 @@
+easy_admin:
+    site_name: 'Best offers for products'
+    entities:
+#        # List the entity class name you want to manage
+        Product:
+            class: App\Entity\Product
+            list:
+                title: "Products list"
+                fields:
+                    - {property: 'name'}
+                    - {property: 'image', type: 'image'}
+        Offer:
+            class: App\Entity\Offer
+            list:
+                title: "Offers list"
+                fields: ['url', 'price', 'priceCurrency']
+
+    design:
+        menu:
+            - Product
+            - Offer
+            - {label: 'Logout', url: '/logout'}
