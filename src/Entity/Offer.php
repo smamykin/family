@@ -7,6 +7,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -15,7 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @see http://schema.org/Offer Documentation on Schema.org
  *
  * @ORM\Entity
- * @ApiResource(iri="http://schema.org/Offer")
+ * @ApiResource(iri="http://schema.org/Offer", normalizationContext={"groups"={"read"}},denormalizationContext={"groups"={"write"}})
  */
 class Offer
 {
@@ -25,6 +26,7 @@ class Offer
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\Column(type="integer")
+     * @Groups({"read"})
      */
     private $id;
 
@@ -35,6 +37,7 @@ class Offer
      * @ApiProperty(iri="http://schema.org/url")
      * @Assert\Url
      * @Assert\NotNull
+     * @Groups({"read", "write"})
      */
     private $url;
 
@@ -44,6 +47,7 @@ class Offer
      * @ORM\Column(type="float")
      * @ApiProperty(iri="http://schema.org/price")
      * @Assert\NotNull
+     * @Groups({"read", "write"})
      */
     private $price;
 
@@ -53,11 +57,13 @@ class Offer
      * @ORM\Column(type="text")
      * @ApiProperty(iri="http://schema.org/priceCurrency")
      * @Assert\NotNull
+     * @Groups({"read", "write"})
      */
     private $priceCurrency;
 
     /**
      * @ORM\ManyToOne(targetEntity=Product::class, inversedBy="offers")
+     * @Groups({"write"})
      */
     private $product;
 

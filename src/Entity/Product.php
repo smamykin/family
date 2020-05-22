@@ -14,6 +14,7 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
@@ -25,7 +26,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  *
  * @ORM\Entity
  * @Vich\Uploadable
- * @ApiResource(iri="http://schema.org/Product")
+ * @ApiResource(iri="http://schema.org/Product", normalizationContext={"groups"={"read"}},denormalizationContext={"groups"={"write"}})
  * @ApiFilter(OrderFilter::class, properties={"id","name"}, arguments={"orderParameterName"="order"})
  * @ApiFilter(ExistsFilter::class, properties={"image"})
  * @ApiFilter(SearchFilter::class, properties={"id": "exact", "name": "partial", "description":"partial"})
@@ -38,6 +39,7 @@ class Product
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\Column(type="integer")
+     * @Groups({"read"})
      */
     private $id;
 
@@ -47,6 +49,7 @@ class Product
      * @ORM\Column(type="text")
      * @ApiProperty(iri="http://schema.org/name")
      * @Assert\NotNull
+     * @Groups({"read", "write"})
      */
     private $name;
 
@@ -56,6 +59,7 @@ class Product
      * @ORM\Column(type="text")
      * @ApiProperty(iri="http://schema.org/description")
      * @Assert\NotNull
+     * @Groups({"read", "write"})
      */
     private $description;
 
@@ -64,6 +68,7 @@ class Product
      *
      * @ORM\Column(type="text", nullable=true)
      * @ApiProperty(iri="http://schema.org/image")
+     * @Groups({"read", "write"})
      */
     private $image;
 
@@ -80,6 +85,8 @@ class Product
 
     /**
      * @ORM\OneToMany(targetEntity=Offer::class, mappedBy="product", cascade={"remove", "persist"})
+     * @Groups({"read", "write"})
+     * @ApiProperty(attributes={"fetchEager": true})
      */
     private $offers;
 
