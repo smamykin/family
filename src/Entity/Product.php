@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -22,6 +24,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  * @ORM\Entity
  * @Vich\Uploadable
  * @ApiResource(iri="http://schema.org/Product")
+ * @ApiFilter(OrderFilter::class, properties={"id","name"}, arguments={"orderParameterName"="order"})
  */
 class Product
 {

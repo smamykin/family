@@ -13,7 +13,7 @@ export function pagination(response)
           backLink.style.display = 'none';
 
           nextLink.nextLink = response['hydra:view']['hydra:next'];
-     } else if (typeof response['hydra:view']['hydra:first'] !== 'undefined') {
+     } else if (typeof response['hydra:view']['hydra:previous'] !== 'undefined') {
           backLink.addEventListener('click', getData)
 
           nextLink.style.display = 'none';
