@@ -1,4 +1,4 @@
-import {baseURL} from '../src/config';
+import {baseUrl} from '../src/config';
 
 let axios = require( '../libraries/axios');
 
@@ -6,7 +6,7 @@ export class Products {
 
     constructor()
     {
-        axios.get(baseURL + '/api/products?pagination=false')
+        axios.get(baseUrl + '/api/products?pagination=false')
             .then((response) => {
                 // console.log(response.data['hydra:member']);
                 response.data['hydra:member'].forEach(product => {

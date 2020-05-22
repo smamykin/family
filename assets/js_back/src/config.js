@@ -1,1 +1,1 @@
-export const baseURL = 'http://family.loc';
+export const baseUrl = 'http://family.loc';
