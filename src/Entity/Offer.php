@@ -16,7 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @see http://schema.org/Offer Documentation on Schema.org
  *
  * @ORM\Entity
- * @ApiResource(iri="http://schema.org/Offer", normalizationContext={"groups"={"read"}},denormalizationContext={"groups"={"write"}})
+ * @ApiResource(iri="http://schema.org/Offer", normalizationContext={"groups"={"read"}},denormalizationContext={"groups"={"write"}}, attributes={"pagination_enabled"=false})
  */
 class Offer
 {
@@ -63,8 +63,8 @@ class Offer
 
     /**
      * @ORM\ManyToOne(targetEntity=Product::class, inversedBy="offers")
-     * @Groups({"write", "read"})
      * @ApiProperty(attributes={"fetchEager": false})
+     * @Groups({"write"})
      */
     private $product;
 
@@ -126,3 +126,4 @@ class Offer
         return $this;
     }
 }
+
