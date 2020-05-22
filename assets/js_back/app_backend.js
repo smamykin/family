@@ -1,8 +1,13 @@
+import {Register} from './actions/Register';
+import {Login} from "./actions/Login";
 import {Products} from './actions/Products';
 import {AddOffer} from './actions/Offer/AddOffer';
 import {GetOffers} from "./actions/Offer/GetOffers";
 import {DeleteOffer} from "./actions/Offer/DeleteOffer";
 
+let login = new Login();
+login.getJWTToken();
+// login.logout();
 // offer
 new Products
 let addOffer = document.getElementById('add-offer');
