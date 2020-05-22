@@ -10,8 +10,14 @@ export const getData = (event) => {
     axios.get(baseURL + url)
         .then(function (response) {
             const orderByName = document.getElementById("order-by-name");
-            orderByName.addEventListener('click', getData)
+            const filterWithImages = document.getElementById('filter-with-images-only');
+
+            orderByName.addEventListener('click', getData);
+            filterWithImages.addEventListener('click', getData);
+
             orderByName.style.display = 'block';
+            filterWithImages.style.display = 'block';
+
             if (typeof orderByName.order === 'undefined' ) {
                 orderByName.order = 'asc';
             } else if (orderByName.order === 'asc') {
