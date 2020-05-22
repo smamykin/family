@@ -8,3 +8,6 @@ api_platform:
     collection:
         pagination:
             items_per_page: 2
+            client_enabled: true
+            enabled_parameter_name: pagination # optional
+

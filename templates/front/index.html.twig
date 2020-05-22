@@ -28,3 +28,8 @@
     <a href="#" id="back-link" class="display-none">&laquo;Back</a>
     <a href="#" id="next-link" class="display-none">Next&raquo;</a>
 {% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('app') }}
+{% endblock %}
