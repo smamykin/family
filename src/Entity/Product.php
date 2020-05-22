@@ -8,6 +8,7 @@ use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\ExistsFilter;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -27,6 +28,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  * @ApiResource(iri="http://schema.org/Product")
  * @ApiFilter(OrderFilter::class, properties={"id","name"}, arguments={"orderParameterName"="order"})
  * @ApiFilter(ExistsFilter::class, properties={"image"})
+ * @ApiFilter(SearchFilter::class, properties={"id": "exact", "name": "partial", "description":"partial"})
  */
 class Product
 {

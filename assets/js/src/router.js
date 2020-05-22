@@ -21,6 +21,13 @@ export function router(event)
         cssFilterApplied(event.target);
         array[2] = '&exists[image]=true';
         return '/api/products'+array[0]+array[1]+array[2]+array[3]
+    } else if (event.target.value === 'search') {
+        let imagesFilter = document.getElementById('filter-with-images-only');
+        cssFilterReset(imagesFilter);
+        array[1] = '';
+        array[2] = '';
+        array[3] = '&name='+document.getElementById("searched-text").value;
+        return '/api/products'+array[0]+array[1]+array[2]+array[3]
     } else if (typeof event.target.nextLink !== 'undefined') {
         return event.target.nextLink
     } else {

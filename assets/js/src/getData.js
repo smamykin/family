@@ -9,11 +9,13 @@ export const getData = (event) => {
     let url = router(event)
     axios.get(baseURL + url)
         .then(function (response) {
+            const searchButton = document.getElementById("search-button");
             const orderByName = document.getElementById("order-by-name");
             const filterWithImages = document.getElementById('filter-with-images-only');
 
             orderByName.addEventListener('click', getData);
             filterWithImages.addEventListener('click', getData);
+            searchButton.addEventListener('click', getData);
 
             orderByName.style.display = 'block';
             filterWithImages.style.display = 'block';
