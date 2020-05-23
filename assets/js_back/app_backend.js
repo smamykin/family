@@ -17,8 +17,7 @@ addOffer.addEventListener('click', () => {
     let currency = document.getElementById('currency');
     let product = document.getElementById('product');
     let product_id = product.options[product.selectedIndex].value;
-    let Offer = new AddOffer();
-    Offer.addOffer(url.value, parseFloat(price.value), currency.value, product_id);
+    new AddOffer(url.value,parseFloat(price.value),currency.value,product_id);
 });
 
 new GetOffers();
@@ -26,7 +25,6 @@ let deleteOffer = document.getElementById('delete-offer-button');
 deleteOffer.addEventListener('click', () => {
     let offer = document.getElementById('delete-offer');
     let offer_id = offer.options[offer.selectedIndex].value;
-    let deleteOffer = new DeleteOffer();
-    deleteOffer.deleteOffer(offer_id);
+    new DeleteOffer(offer_id);
 });
 

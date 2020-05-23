@@ -3,6 +3,27 @@ import {baseUrl, email, password} from '../src/config'
 let axios = require( '../libraries/axios');
 
 export class Login {
+
+    constructor(action = null)
+    {
+        if(action !== null)
+        {
+            this.sendTokenHeader().then( () => {
+                eval("this."+action+"()")
+            } )
+        }
+    }
+
+    sendTokenHeader()
+    {
+        return new Promise ( (resolve) => {
+            axios.defaults.headers.common = {
+                'Authorization': 'Bearer ' + localStorage.getItem('jwt_token')
+            }
+            resolve()
+        } )
+    }
+
     getJWTToken()
     {
         let params = {

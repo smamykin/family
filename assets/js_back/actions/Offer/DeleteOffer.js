@@ -1,18 +1,18 @@
 import {baseUrl} from "../../src/config";
+import {Login} from "../Login";
 
 let axios = require( '../../libraries/axios');
 
-export class DeleteOffer
+export class DeleteOffer extends Login
 {
-    constructor() {
-        axios.defaults.headers.common = {
-            'Authorization': 'Bearer ' + localStorage.getItem('jwt_token')
-        }
+    constructor(delete_url) {
+        super('deleteOffer');
+        this.delete_url = delete_url;
     }
 
-    deleteOffer(delete_url)
+    deleteOffer()
     {
-        axios.delete(baseUrl + delete_url).then((response) => {
+        axios.delete(baseUrl + this.delete_url).then((response) => {
             console.log(response);
         }).catch((error) => {
             console.log(error);
