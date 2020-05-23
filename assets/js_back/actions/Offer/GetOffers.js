@@ -4,7 +4,9 @@ let axios = require( '../../libraries/axios');
 
 export class GetOffers {
     constructor() {
-        axios.get(baseUrl + '/api/offers').then( response => {
+        let userId = localStorage.getItem('user_id')
+        if (userId == null) return;
+        axios.get(baseUrl + '/api/users/'+userId+'/offers').then( response => {
             response.data['hydra:member'].forEach(offer => {
                 this.addOptionElement(offer.url, offer['@id'])
             });

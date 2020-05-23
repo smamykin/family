@@ -16,7 +16,14 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @see http://schema.org/Offer Documentation on Schema.org
  *
  * @ORM\Entity
- * @ApiResource(iri="http://schema.org/Offer", normalizationContext={"groups"={"read"}},denormalizationContext={"groups"={"write"}}, attributes={"pagination_enabled"=false})
+ * @ApiResource(
+ *iri="http://schema.org/Offer",
+ *normalizationContext={"groups"={"read"}},denormalizationContext={"groups"={"write"}}, attributes={"pagination_enabled"=false},
+ * itemOperations={
+ * "get",
+ * "delete"={"security"="object.getUser() == user", "security_message"="Sorry, but you are not the offer author."}
+ *     }
+ *)
  */
 class Offer
 {
@@ -67,6 +74,12 @@ class Offer
      * @Groups({"write"})
      */
     private $product;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="offers")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $user;
 
     public function __toString()
     {
@@ -122,6 +135,18 @@ class Offer
     public function setProduct(?Product $product): self
     {
         $this->product = $product;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }

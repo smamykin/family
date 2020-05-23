@@ -17,6 +17,7 @@ export class Login {
 
         axios.post(baseUrl+'/authentication_token', params, config).then(response=>{
             localStorage.setItem("jwt_token", response.data.token)
+            localStorage.setItem("user_id", response.data.id)
             // console.log(response.data.token);
         }).catch(error => {
             // console.log(error);
