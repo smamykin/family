@@ -141,6 +141,9 @@
     "jms/metadata": {
         "version": "2.1.0"
     },
+    "justinrainbow/json-schema": {
+        "version": "5.2.9"
+    },
     "lcobucci/jwt": {
         "version": "3.3.2"
     },

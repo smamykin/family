@@ -20,9 +20,16 @@ use Symfony\Component\Validator\Constraints as Assert;
  *iri="http://schema.org/Offer",
  *normalizationContext={"groups"={"read"}},denormalizationContext={"groups"={"write"}}, attributes={"pagination_enabled"=false},
  * itemOperations={
- * "get",
- * "delete"={"security"="object.getUser() == user", "security_message"="Sorry, but you are not the offer author."}
+ *     "get",
+ *     "delete"={
+ *         "security"="object.getUser() == user",
+ *          "security_message"="Sorry, but you are not the offer author."
+ *     },
+ *     "patch"={
+ *          "validation_groups"={"patchValidation"}
  *     }
+ * },
+ * collectionOperations={"get", "post"={"validation_groups"={"postValidation"}}}
  *)
  */
 class Offer
@@ -63,8 +70,9 @@ class Offer
      *
      * @ORM\Column(type="text")
      * @ApiProperty(iri="http://schema.org/priceCurrency")
-     * @Assert\NotNull
+     * @Assert\NotNull(groups={"patchValidation"})
      * @Groups({"read", "write"})
+     * @Assert\NotBlank(groups={"postValidation"})
      */
     private $priceCurrency;
 

@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\LostPassword;
 use App\Entity\User;
 use App\Event\ResetPasswordRequestEvent;
+use App\Exception\CustomException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -25,6 +26,7 @@ class RequestNewPasswordController extends AbstractController
 
     public function __invoke(LostPassword $data)
     {
+//        throw new CustomException();
         $em = $this->getDoctrine()->getManager();
         $rep = $em->getRepository(User::class );
         $user = $rep->findOneBy(['email'=>$data->getEmail()]);
