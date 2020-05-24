@@ -5,8 +5,19 @@ import {AddOffer} from './actions/Offer/AddOffer';
 import {GetOffers} from "./actions/Offer/GetOffers";
 import {DeleteOffer} from "./actions/Offer/DeleteOffer";
 
-let login = new Login();
-login.getJWTToken();
+// let login = new Login();
+// login.getJWTToken();
+window.onload = () => {
+    let needsLogin = document.getElementById('needs-login');
+    needsLogin.addEventListener('click', () => {
+        let login = new Login();
+        login.logout().then(() => {
+            login.login();
+        });
+        needsLogin.style.display = 'none';
+    });
+
+};
 // login.logout();
 // offer
 new Products

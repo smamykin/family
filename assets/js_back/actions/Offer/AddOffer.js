@@ -32,7 +32,9 @@ export class AddOffer extends Login  {
         axios.post(baseUrl + '/api/offers', params, config).then((response) => {
             console.log(response);
         }).catch((error) => {
-            console.log(error);
+            if (error.response.data.code == '401') {
+                this.handle401Error();
+            }
         });
     }
 }

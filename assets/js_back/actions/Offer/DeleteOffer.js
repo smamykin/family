@@ -15,7 +15,9 @@ export class DeleteOffer extends Login
         axios.delete(baseUrl + this.delete_url).then((response) => {
             console.log(response);
         }).catch((error) => {
-            console.log(error);
+            if (error.response.data.code == '401') {
+                this.handle401Error();
+            }
         });
     }
 }
