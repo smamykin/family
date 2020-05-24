@@ -13,3 +13,8 @@ api:
 check_path:
   path: /authentication_token
   methods: [POST]
+
+upload_image:
+  path: /api/upload
+  controller: App\Controller\UploadFileController
+  methods: POST

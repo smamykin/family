@@ -5,6 +5,7 @@ import {AddOffer} from './actions/Offer/AddOffer';
 import {GetOffers} from "./actions/Offer/GetOffers";
 import {DeleteOffer} from "./actions/Offer/DeleteOffer";
 import {ResetPassword} from "./actions/ResetPassword";
+import {Upload} from "./actions/Upload";
 
 // let login = new Login();
 // login.getJWTToken();
@@ -65,3 +66,17 @@ if (window.localStorage.getItem('userIdChangesPassword') !== null) {
     document.getElementById('reset-password-request').style.display = 'none';
     document.getElementById('reset-password').style.display = 'block';
 }
+
+let upload = document.getElementById('upload-file');
+upload.addEventListener("change", e => {
+    let files = e.target.files ||  e.dataTransfer.files
+    if (!files.length) {
+        console.log('no files');
+    }
+    let product = document.getElementById('product');
+    let productId = product.options[product.selectedIndex].value;
+    if (!productId) return;
+    // console.log(files[0].name);
+    new Upload(files, productId)
+});
+
