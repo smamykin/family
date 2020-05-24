@@ -3,6 +3,14 @@
 {% block title %}Back Application{% endblock %}
 
 {% block stylesheets %}
+    <style>
+        .display-none {
+            display: none;
+        }
+        .cursor-pointer {
+            cursor: pointer;
+        }
+    </style>
     {{ parent() }}
 {% endblock %}
 
@@ -30,6 +38,8 @@
 
     </p>
     <p id="needs-login" class="display-none"></p>
+    <p id="reset-password-request" class="cursor-pointer">Reset password</p>
+    <p id="reset-password" class="display-none cursor-pointer">Get the token and make final request to change password</p>
 
 {% endblock %}
 

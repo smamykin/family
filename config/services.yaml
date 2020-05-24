@@ -30,6 +30,10 @@ services:
         tags:
             - { name: kernel.view }
 
+    App\Listener\ResetPasswordRequestListener:
+        tags:
+            - {name: kernel.event_listener, event: reset.password.requested, method: onResetPasswordRequestedAction}
+
 
     event.authentication_success_listener:
         class: App\Listener\AuthenticationSuccessListener
